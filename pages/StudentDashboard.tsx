@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { 
-  Calendar, Clock, Search, Edit2, User as UserIcon, 
-  Trash2, Video, MessageSquare, Heart, CheckCircle2, AlertCircle, ArrowRight
-} from 'lucide-react';
+import { Calendar, Clock, Video, Heart, ArrowRight, Send } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
+import DemoBadge from '../components/DemoBadge';
 
 const StudentDashboard: React.FC = () => {
   const { sessions, cancelSession, savedTutorIds, tutors, currentUser } = useApp();
@@ -12,382 +10,320 @@ const StudentDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'bookings' | 'saved' | 'messages'>('bookings');
 
   const studentName = currentUser?.name || 'Alex Johnson';
-  const studentInitial = studentName.charAt(0).toUpperCase();
 
   const upcomingSessions = sessions.filter((s) => s.status === 'Upcoming');
   const pastSessions = sessions.filter((s) => s.status !== 'Upcoming');
-
   const savedTutorsList = tutors.filter((t) => savedTutorIds.includes(t.id));
 
   const totalSpent = sessions
     .filter((s) => s.status !== 'Cancelled')
     .reduce((acc, curr) => acc + curr.price, 0);
 
+  const tabs = [
+    { id: 'bookings' as const, label: `Sessions (${sessions.length})` },
+    { id: 'saved' as const, label: `Saved (${savedTutorsList.length})` },
+    { id: 'messages' as const, label: 'Messages (2)' },
+  ];
+
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pb-16 transition-colors duration-200">
-      
-      {/* Dashboard Hero Header */}
-      <div className="bg-gradient-to-r from-slate-900 via-primary-950 to-indigo-950 text-white py-10 px-4 sm:px-6 lg:px-8 shadow-xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-primary-500/10 rounded-full blur-3xl pointer-events-none" />
-        
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 relative z-10">
-          <div className="flex items-center gap-5">
-            {currentUser?.avatar ? (
-              <img
-                src={currentUser.avatar}
-                alt={studentName}
-                className="h-20 w-20 rounded-2xl object-cover shadow-lg border-2 border-white/20"
-              />
-            ) : (
-              <div className="h-20 w-20 rounded-2xl bg-gradient-to-tr from-primary-500 to-indigo-400 text-white flex items-center justify-center text-3xl font-black shadow-lg border-2 border-white/20">
-                {studentInitial}
-              </div>
-            )}
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-2xl sm:text-3xl font-black tracking-tight">{studentName}</h1>
-                <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
-                  Active Student
-                </span>
-              </div>
-              <p className="text-slate-400 text-xs sm:text-sm mt-1">
-                {currentUser?.gradeLevel || 'Computer Science & Advanced Mathematics • Grade 12'}
-              </p>
+    <div className="page pb-20">
+      <div className="container-page pt-10 sm:pt-12">
+        <header className="flex flex-col justify-between gap-6 border-b border-line pb-8 sm:flex-row sm:items-end">
+          <div>
+            <div className="flex flex-wrap items-center gap-3">
+              <h1 className="text-[2rem] font-semibold leading-none tracking-[-0.03em]">
+                {studentName}
+              </h1>
+              <DemoBadge label="Demo dashboard" />
             </div>
+            <p className="mt-2 text-[13px] text-muted">
+              {currentUser?.gradeLevel || 'Grade 12 · Computer Science & Mathematics'}
+            </p>
           </div>
-          
-          <div className="flex items-center gap-3">
-            <Link
-              to="/find-tutors"
-              className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-primary-500 to-indigo-600 hover:from-primary-600 hover:to-indigo-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary-500/30 transition-all hover:scale-105"
+
+          <Link to="/find-tutors" className="btn btn-outline btn-sm">
+            Find a tutor
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </header>
+
+        <div className="grid grid-cols-2 border-b border-line sm:grid-cols-4">
+          {[
+            { label: 'Sessions', value: sessions.length },
+            { label: 'Upcoming', value: upcomingSessions.length },
+            { label: 'Saved tutors', value: savedTutorsList.length },
+            { label: 'Total spent', value: `NPR ${totalSpent.toLocaleString()}` },
+          ].map((stat, i) => (
+            <div
+              key={stat.label}
+              className={`py-5 ${i > 0 ? 'sm:border-l sm:border-line sm:pl-6' : ''} ${
+                i === 1 ? 'border-l border-line pl-6' : ''
+              } ${i === 3 ? 'border-l border-line pl-6' : ''} ${
+                i === 2 ? 'border-t border-line sm:border-t-0' : ''
+              }`}
             >
-              <Search className="h-4 w-4" /> 
-              Find New Tutors
-            </Link>
-          </div>
-        </div>
-
-        {/* Quick Metrics Bar */}
-        <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 pt-6 border-t border-white/10 text-white">
-          <div className="bg-white/5 backdrop-blur-md rounded-2xl p-4 border border-white/10">
-            <span className="text-xs text-slate-400 font-semibold uppercase">Total Sessions</span>
-            <p className="text-2xl font-black text-white mt-1">{sessions.length}</p>
-          </div>
-          <div className="bg-white/5 backdrop-blur-md rounded-2xl p-4 border border-white/10">
-            <span className="text-xs text-slate-400 font-semibold uppercase">Upcoming</span>
-            <p className="text-2xl font-black text-amber-300 mt-1">{upcomingSessions.length}</p>
-          </div>
-          <div className="bg-white/5 backdrop-blur-md rounded-2xl p-4 border border-white/10">
-            <span className="text-xs text-slate-400 font-semibold uppercase">Saved Tutors</span>
-            <p className="text-2xl font-black text-rose-300 mt-1">{savedTutorsList.length}</p>
-          </div>
-          <div className="bg-white/5 backdrop-blur-md rounded-2xl p-4 border border-white/10">
-            <span className="text-xs text-slate-400 font-semibold uppercase">Total Invested</span>
-            <p className="text-2xl font-black text-emerald-300 mt-1">NPR {totalSpent}</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Navigation Sub-bar Tabs */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-4 relative z-20">
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-1.5 flex gap-2">
-          <button
-            onClick={() => setActiveTab('bookings')}
-            className={`flex-1 py-3 text-center rounded-xl font-bold text-sm transition-all ${
-              activeTab === 'bookings'
-                ? 'bg-primary-600 text-white shadow-md shadow-primary-200'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-            }`}
-          >
-            My Bookings ({sessions.length})
-          </button>
-          <button
-            onClick={() => setActiveTab('saved')}
-            className={`flex-1 py-3 text-center rounded-xl font-bold text-sm transition-all ${
-              activeTab === 'saved'
-                ? 'bg-primary-600 text-white shadow-md shadow-primary-200'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-            }`}
-          >
-            Saved Tutors ({savedTutorsList.length})
-          </button>
-          <button
-            onClick={() => setActiveTab('messages')}
-            className={`flex-1 py-3 text-center rounded-xl font-bold text-sm transition-all ${
-              activeTab === 'messages'
-                ? 'bg-primary-600 text-white shadow-md shadow-primary-200'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-            }`}
-          >
-            Direct Messages (2)
-          </button>
-        </div>
-      </div>
-
-      {/* Main Tab Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
-        {/* TAB 1: Bookings */}
-        {activeTab === 'bookings' && (
-          <div className="space-y-8">
-            
-            {/* Upcoming Sessions */}
-            <div>
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
-                  <Calendar className="h-5 w-5 text-primary-600" />
-                  Upcoming Sessions ({upcomingSessions.length})
-                </h2>
+              <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted">
+                {stat.label}
               </div>
-              
-              {upcomingSessions.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {upcomingSessions.map((session) => (
-                    <div 
-                      key={session.id} 
-                      className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
-                    >
-                      <div>
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <span className="bg-primary-50 text-primary-700 font-bold text-xs px-3 py-1 rounded-full border border-primary-100">
-                              {session.subject}
+              <div className="mt-1.5 text-xl font-semibold tabular-nums tracking-[-0.01em]">
+                {stat.value}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8 flex gap-7 border-b border-line">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`tab ${activeTab === tab.id ? 'tab-active' : ''}`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-8">
+          {activeTab === 'bookings' && (
+            <div className="space-y-12">
+              <section>
+                <h2 className="text-lg font-semibold tracking-[-0.01em]">Upcoming</h2>
+
+                {upcomingSessions.length > 0 ? (
+                  <div className="mt-3 border-y border-line">
+                    {upcomingSessions.map((session) => (
+                      <article
+                        key={session.id}
+                        className="flex flex-col gap-4 border-t border-line py-5 first:border-t-0 md:flex-row md:items-center md:justify-between"
+                      >
+                        <div className="min-w-0">
+                          <h3 className="text-base font-semibold text-ink">
+                            {session.tutorName}
+                          </h3>
+                          <p className="mt-0.5 text-[13px] text-muted">{session.subject}</p>
+                          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[12px] text-muted">
+                            <span className="flex items-center gap-1">
+                              <Calendar className="h-3.5 w-3.5" />
+                              {session.date}
                             </span>
-                            <h3 className="text-xl font-black text-slate-900 mt-2">{session.tutorName}</h3>
+                            <span className="flex items-center gap-1">
+                              <Clock className="h-3.5 w-3.5" />
+                              {session.time} · {session.duration}
+                            </span>
+                            <span className="tabular-nums">NPR {session.price.toLocaleString()}</span>
                           </div>
-                          <span className="bg-amber-50 text-amber-800 text-xs font-bold px-2.5 py-1 rounded-full border border-amber-200">
-                            Upcoming
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => cancelSession(session.id)}
+                            className="btn btn-danger btn-sm"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            onClick={() => navigate(`/classroom/${session.id}`)}
+                            className="btn btn-primary btn-sm"
+                          >
+                            <Video className="h-3.5 w-3.5" />
+                            Join classroom
+                          </button>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="mt-3 border-y border-line py-12 text-center">
+                    <p className="text-sm text-ink">No upcoming sessions.</p>
+                    <p className="mt-1 text-[13px] text-muted">
+                      Book a lesson to see it here.
+                    </p>
+                    <Link to="/find-tutors" className="btn btn-outline btn-sm mt-4">
+                      Browse tutors
+                    </Link>
+                  </div>
+                )}
+              </section>
+
+              <section>
+                <h2 className="text-lg font-semibold tracking-[-0.01em]">Completed and past</h2>
+
+                {pastSessions.length > 0 ? (
+                  <div className="mt-3 border-y border-line">
+                    {pastSessions.map((session) => (
+                      <article
+                        key={session.id}
+                        className="flex flex-col gap-2 border-t border-line py-4 first:border-t-0 sm:flex-row sm:items-center sm:justify-between"
+                      >
+                        <div>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <h3 className="text-sm font-medium text-ink">{session.tutorName}</h3>
+                            <span className="text-[11px] text-muted">{session.subject}</span>
+                          </div>
+                          <div className="mt-1 text-[12px] tabular-nums text-muted">
+                            {session.date} · {session.time} · NPR {session.price.toLocaleString()}
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between gap-4 sm:justify-end">
+                          <span
+                            className={`text-[12px] ${
+                              session.status === 'Completed' ? 'text-ok' : 'text-accent'
+                            }`}
+                          >
+                            {session.status}
                           </span>
+                          <button
+                            onClick={() => navigate('/find-tutors')}
+                            className="text-[12px] text-muted hover:text-ink"
+                          >
+                            Book again
+                          </button>
                         </div>
+                      </article>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="mt-3 border-y border-line py-8 text-center text-[13px] text-muted">
+                    No past sessions yet.
+                  </p>
+                )}
+              </section>
+            </div>
+          )}
 
-                        <div className="grid grid-cols-2 gap-2 mt-4 text-xs font-semibold text-slate-600 bg-slate-50 p-3 rounded-2xl">
-                          <div className="flex items-center gap-1.5">
-                            <Calendar className="h-4 w-4 text-primary-600" />
-                            <span>{session.date}</span>
-                          </div>
-                          <div className="flex items-center gap-1.5">
-                            <Clock className="h-4 w-4 text-primary-600" />
-                            <span>{session.time} ({session.duration})</span>
-                          </div>
-                        </div>
+          {activeTab === 'saved' && (
+            <section>
+              <h2 className="text-lg font-semibold tracking-[-0.01em]">Saved tutors</h2>
 
-                        <div className="mt-4 flex justify-between items-center">
-                          <span className="text-xs text-slate-400 font-medium">Session Fee:</span>
-                          <span className="text-lg font-black text-slate-900">NPR {session.price}</span>
+              {savedTutorsList.length > 0 ? (
+                <div className="mt-3 border-y border-line">
+                  {savedTutorsList.map((tutor) => (
+                    <article
+                      key={tutor.id}
+                      className="flex flex-col gap-4 border-t border-line py-4 first:border-t-0 sm:flex-row sm:items-center sm:justify-between"
+                    >
+                      <div className="flex items-center gap-3">
+                        <img
+                          src={tutor.avatar}
+                          alt=""
+                          className="h-10 w-10 rounded-[2px] object-cover"
+                        />
+                        <div>
+                          <h3 className="text-sm font-medium text-ink">{tutor.name}</h3>
+                          <p className="text-[12px] text-muted">
+                            {tutor.subjects.join(' · ')} · {tutor.experience}
+                          </p>
                         </div>
                       </div>
 
-                      <div className="mt-6 pt-4 border-t border-slate-100 flex gap-2">
-                        <button 
-                          onClick={() => navigate(`/classroom/${session.id}`)}
-                          className="flex-1 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-sm transition-all hover:scale-[1.02]"
-                        >
-                          <Video className="h-4 w-4" /> Join Live Classroom
-                        </button>
+                      <div className="flex items-center gap-4">
+                        <span className="text-[12px] tabular-nums text-muted">
+                          NPR {tutor.price.toLocaleString()}/hr
+                        </span>
                         <button
-                          onClick={() => cancelSession(session.id)}
-                          className="px-3 py-2.5 border border-rose-200 text-rose-600 hover:bg-rose-50 rounded-xl text-xs font-bold transition-all"
-                          title="Cancel session"
+                          onClick={() => navigate(`/tutor/${tutor.id}`)}
+                          className="btn btn-outline btn-sm"
                         >
-                          Cancel
+                          View profile
                         </button>
                       </div>
-                    </div>
+                    </article>
                   ))}
                 </div>
               ) : (
-                <div className="bg-white rounded-3xl p-10 text-center border border-dashed border-slate-300">
-                  <Calendar className="h-10 w-10 text-slate-300 mx-auto mb-3" />
-                  <p className="text-slate-600 font-bold">No upcoming sessions right now.</p>
-                  <p className="text-slate-400 text-xs mt-1 mb-4">Book your next 1-on-1 session with an expert tutor.</p>
-                  <Link 
-                    to="/find-tutors" 
-                    className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-primary-600 text-white font-bold text-xs rounded-xl shadow-md hover:bg-primary-700 transition-all"
-                  >
-                    Browse Available Tutors <ArrowRight className="h-3.5 w-3.5" />
+                <div className="mt-3 border-y border-line py-12 text-center">
+                  <Heart className="mx-auto h-5 w-5 text-muted" />
+                  <p className="mt-3 text-sm text-ink">No saved tutors yet.</p>
+                  <p className="mt-1 text-[13px] text-muted">
+                    Use the heart icon on any tutor row to keep it here.
+                  </p>
+                  <Link to="/find-tutors" className="btn btn-outline btn-sm mt-4">
+                    Browse tutors
                   </Link>
                 </div>
               )}
-            </div>
+            </section>
+          )}
 
-            {/* Past Sessions */}
-            <div>
-              <h2 className="text-xl font-black text-slate-900 tracking-tight mb-4">
-                Completed & Past Sessions ({pastSessions.length})
-              </h2>
-              
-              <div className="space-y-3">
-                {pastSessions.length > 0 ? (
-                  pastSessions.map((session) => (
-                    <div 
-                      key={session.id} 
-                      className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
-                    >
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h4 className="font-bold text-slate-900">{session.tutorName}</h4>
-                          <span className="text-xs bg-slate-100 font-semibold px-2 py-0.5 rounded text-slate-600">
-                            {session.subject}
-                          </span>
-                        </div>
-                        <div className="text-xs text-slate-500 mt-1 flex items-center gap-3">
-                          <span>{session.date} • {session.time}</span>
-                          <span>• NPR {session.price}</span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
-                        {session.status === 'Completed' ? (
-                          <span className="px-3 py-1 bg-emerald-100 text-emerald-800 text-xs rounded-full font-bold">
-                            Completed
-                          </span>
-                        ) : (
-                          <span className="px-3 py-1 bg-rose-100 text-rose-800 text-xs rounded-full font-bold">
-                            Cancelled
-                          </span>
-                        )}
-                        <button 
-                          onClick={() => navigate('/find-tutors')}
-                          className="text-xs font-bold text-primary-600 hover:text-primary-800 hover:underline"
-                        >
-                          Book Again
-                        </button>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="bg-white rounded-2xl p-6 text-center text-slate-400 text-sm">
-                    No past sessions yet.
-                  </div>
-                )}
-              </div>
-            </div>
-
-          </div>
-        )}
-
-        {/* TAB 2: Saved Tutors */}
-        {activeTab === 'saved' && (
-          <div>
-            <div className="mb-6">
-              <h2 className="text-xl font-black text-slate-900 tracking-tight">Your Saved Mentors</h2>
-              <p className="text-xs text-slate-500">Quickly rebook or view profiles of tutors you've bookmarked.</p>
-            </div>
-
-            {savedTutorsList.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {savedTutorsList.map((tutor) => (
-                  <div key={tutor.id} className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm hover:shadow-lg transition-all flex flex-col justify-between">
-                    <div>
-                      <div className="flex items-center gap-4 mb-4">
-                        <img src={tutor.avatar} alt={tutor.name} className="h-16 w-16 rounded-2xl object-cover border-2 border-white shadow-md" />
-                        <div>
-                          <h4 className="font-bold text-slate-900 text-base">{tutor.name}</h4>
-                          <span className="text-xs text-slate-500 font-medium">{tutor.experience}</span>
-                          <p className="text-sm font-black text-primary-700 mt-1">NPR {tutor.price}/hr</p>
-                        </div>
-                      </div>
-                      <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed mb-4">{tutor.bio}</p>
-                    </div>
-
-                    <div className="pt-4 border-t border-slate-100 flex gap-2">
-                      <button
-                        onClick={() => navigate(`/tutor/${tutor.id}`)}
-                        className="flex-1 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-xs font-bold transition-all text-center"
-                      >
-                        Book Now
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="bg-white rounded-3xl p-10 text-center border border-dashed border-slate-300">
-                <Heart className="h-10 w-10 text-slate-300 mx-auto mb-3" />
-                <p className="text-slate-600 font-bold">You haven't saved any tutors yet.</p>
-                <p className="text-slate-400 text-xs mt-1 mb-4">Click the heart icon on any tutor card to save them here.</p>
-                <Link to="/find-tutors" className="px-5 py-2.5 bg-primary-600 text-white font-bold text-xs rounded-xl shadow-md">
-                  Explore Tutors
-                </Link>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* TAB 3: Messages */}
-        {activeTab === 'messages' && (
-          <div className="bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden grid grid-cols-1 md:grid-cols-3 min-h-[480px]">
-            <div className="border-r border-slate-100 p-4 space-y-2 bg-slate-50/50">
-              <h3 className="font-bold text-slate-900 text-sm mb-3">Recent Chats</h3>
-              <div className="p-3 bg-white rounded-2xl border border-primary-200 shadow-sm cursor-pointer">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="font-bold text-xs text-slate-900">Rajesh Sharma</span>
-                  <span className="text-[10px] text-primary-600 font-semibold">10:45 AM</span>
+          {activeTab === 'messages' && (
+            <section className="grid overflow-hidden border border-line md:grid-cols-[240px_minmax(0,1fr)]">
+              <div className="border-b border-line bg-surface md:border-b-0 md:border-r">
+                <div className="border-b border-line px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted">
+                  Conversations
                 </div>
-                <p className="text-xs text-slate-500 truncate">I've uploaded the calculus problem set for tomorrow!</p>
-              </div>
-              <div className="p-3 bg-white/70 hover:bg-white rounded-2xl border border-slate-100 cursor-pointer">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="font-bold text-xs text-slate-800">Anita Shrestha</span>
-                  <span className="text-[10px] text-slate-400 font-medium">Yesterday</span>
-                </div>
-                <p className="text-xs text-slate-500 truncate">Great work on the organic chemistry reaction quiz!</p>
-              </div>
-            </div>
-
-            <div className="md:col-span-2 p-6 flex flex-col justify-between">
-              <div>
-                <div className="flex justify-between items-center pb-4 border-b border-slate-100">
-                  <div className="flex items-center gap-3">
-                    <img src="https://picsum.photos/seed/rajesh/100/100" alt="Rajesh" className="h-10 w-10 rounded-full object-cover" />
-                    <div>
-                      <h4 className="font-bold text-sm text-slate-900">Rajesh Sharma</h4>
-                      <span className="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
-                        <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" /> Online
-                      </span>
-                    </div>
+                <button className="w-full border-b border-line bg-ink/[0.03] px-4 py-3 text-left">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[13px] font-medium text-ink">Rajesh Sharma</span>
+                    <span className="text-[10px] text-muted">10:45</span>
                   </div>
-                  <button 
-                    onClick={() => navigate('/classroom/s1')}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-primary-50 text-primary-700 hover:bg-primary-100 rounded-xl text-xs font-bold transition-all hover:scale-105"
-                  >
-                    <Video className="h-3.5 w-3.5" /> Start Call
-                  </button>
-                </div>
-
-                <div className="py-6 space-y-4 text-xs">
-                  <div className="flex gap-2 max-w-[80%]">
-                    <div className="p-3.5 rounded-2xl bg-slate-100 text-slate-800">
-                      Hi Alex! Don't forget our session scheduled for tomorrow. Have you had a chance to look at derivatives?
-                    </div>
+                  <p className="mt-1 truncate text-[12px] text-muted">
+                    I've uploaded the calculus problem set.
+                  </p>
+                </button>
+                <button className="w-full px-4 py-3 text-left hover:bg-ink/[0.02]">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[13px] font-medium text-ink">Anita Shrestha</span>
+                    <span className="text-[10px] text-muted">Yesterday</span>
                   </div>
-                  <div className="flex justify-end">
-                    <div className="p-3.5 rounded-2xl bg-primary-600 text-white max-w-[80%]">
-                      Yes sir! I solved exercises 4 through 9, but got stuck on the chain rule problem.
-                    </div>
-                  </div>
-                  <div className="flex gap-2 max-w-[80%]">
-                    <div className="p-3.5 rounded-2xl bg-slate-100 text-slate-800">
-                      I've uploaded the calculus problem set for tomorrow! We will crack it together.
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-4 border-t border-slate-100 flex gap-2">
-                <input
-                  type="text"
-                  placeholder="Type a message to Rajesh..."
-                  className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-primary-500 font-medium"
-                />
-                <button className="px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-xs font-bold">
-                  Send
+                  <p className="mt-1 truncate text-[12px] text-muted">
+                    Great work on the chemistry quiz.
+                  </p>
                 </button>
               </div>
-            </div>
-          </div>
-        )}
 
+              <div className="flex min-h-[380px] flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between border-b border-line px-4 py-3">
+                    <div>
+                      <h3 className="text-sm font-medium text-ink">Rajesh Sharma</h3>
+                      <span className="flex items-center gap-1.5 text-[11px] text-muted">
+                        <span className="h-1.5 w-1.5 rounded-full bg-ok" />
+                        Available
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => navigate('/classroom/s1')}
+                      className="btn btn-outline btn-sm"
+                    >
+                      <Video className="h-3.5 w-3.5" />
+                      Open classroom
+                    </button>
+                  </div>
+
+                  <div className="space-y-4 px-4 py-5 text-[13px]">
+                    <div className="max-w-[85%] border border-line bg-surface p-3 leading-relaxed text-ink">
+                      Hi Alex. Don't forget our session tomorrow. Have you had a chance to
+                      look at derivatives?
+                    </div>
+                    <div className="ml-auto max-w-[85%] bg-ink p-3 leading-relaxed text-paper">
+                      Yes. I solved exercises 4 through 9, but got stuck on the chain rule.
+                    </div>
+                    <div className="max-w-[85%] border border-line bg-surface p-3 leading-relaxed text-ink">
+                      I've uploaded the calculus problem set. We will work through it together.
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex gap-2 border-t border-line p-4">
+                  <label className="sr-only" htmlFor="dm">
+                    Message Rajesh
+                  </label>
+                  <input
+                    id="dm"
+                    type="text"
+                    placeholder="Write a message"
+                    className="input"
+                  />
+                  <button className="btn btn-primary" aria-label="Send message">
+                    <Send className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            </section>
+          )}
+        </div>
       </div>
     </div>
   );

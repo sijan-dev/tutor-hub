@@ -1,239 +1,247 @@
 import React, { useState } from 'react';
-import { Book, Search, ChevronRight, Sparkles, Video, ShieldCheck, CreditCard, Bot, HelpCircle, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import DemoBadge from '../components/DemoBadge';
 
 const Documentation: React.FC = () => {
   const [activeSection, setActiveSection] = useState('overview');
-  const [searchQuery, setSearchQuery] = useState('');
 
   const sections = [
-    { id: 'overview', title: 'Platform Overview', icon: Book },
-    { id: 'classroom', title: '3D Virtual Classroom', icon: Video },
-    { id: 'booking', title: 'Booking & Escrow Payments', icon: CreditCard },
-    { id: 'ai', title: 'AI Study Copilot', icon: Bot },
-    { id: 'faq', title: 'Frequently Asked Questions', icon: HelpCircle },
+    { id: 'overview', title: 'Overview' },
+    { id: 'classroom', title: 'Classroom' },
+    { id: 'booking', title: 'Booking and checkout' },
+    { id: 'ai', title: 'AI study assistant' },
+    { id: 'faq', title: 'Questions' },
+  ];
+
+  const paymentMethods = [
+    { name: 'Khalti', detail: 'Demo wallet option' },
+    { name: 'eSewa', detail: 'Demo direct-pay option' },
+    { name: 'Visa and Mastercard', detail: 'Demo card option' },
+  ];
+
+  const faqs = [
+    {
+      q: 'How do I join a class?',
+      a: 'Open your dashboard and choose Join classroom on an upcoming session. The room opens with sample session data.',
+    },
+    {
+      q: 'Can I keep the whiteboard notes?',
+      a: 'Yes. Use Save notes in the classroom header to download the current whiteboard as a PNG.',
+    },
+    {
+      q: 'Are tutors verified?',
+      a: 'Not yet. Profiles are sample data and verification is not built. A verification badge will only appear once that process exists.',
+    },
+    {
+      q: 'Does checkout charge me?',
+      a: 'No. Checkout saves a sample booking in your browser and never contacts a payment provider.',
+    },
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50/70 pb-16">
-      
-      {/* Header */}
-      <div className="bg-gradient-to-r from-slate-900 via-primary-950 to-indigo-950 text-white py-12 px-4 sm:px-6 lg:px-8 shadow-md">
-        <div className="max-w-7xl mx-auto text-center sm:text-left flex flex-col sm:flex-row justify-between items-center gap-6">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-500/20 text-primary-200 border border-primary-500/30 text-xs font-bold uppercase tracking-wider mb-2">
-              <Sparkles className="h-3.5 w-3.5 text-amber-300" />
-              Documentation & Guides
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-black tracking-tight">Tutor Hub Knowledge Center</h1>
-            <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-xl">
-              Learn how to search tutors, conduct live sessions, use the collaborative whiteboard, and handle secure payments.
+    <div className="page pb-20">
+      <header className="container-page border-b border-line py-12">
+        <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
+          <div className="max-w-xl">
+            <h1 className="text-[2rem] font-semibold leading-tight tracking-[-0.03em] sm:text-[2.25rem]">
+              Guide
+            </h1>
+            <p className="mt-3 text-[15px] leading-relaxed text-muted">
+              How discovery, booking, and the live classroom work in this build. Everything
+              here uses sample data.
             </p>
+            <div className="mt-4">
+              <DemoBadge label="Demo documentation" />
+            </div>
           </div>
 
-          <Link
-            to="/find-tutors"
-            className="px-5 py-2.5 bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-700 hover:to-indigo-700 text-white font-bold text-xs rounded-xl shadow-lg transition-all"
-          >
-            Find a Tutor Now →
+          <Link to="/find-tutors" className="btn btn-outline btn-sm self-start sm:self-auto">
+            Find a tutor
           </Link>
         </div>
-      </div>
+      </header>
 
-      {/* Main Container */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
-          
-          {/* Navigation Sidebar (Horizontal on Mobile, Vertical on Desktop) */}
-          <aside className="w-full lg:w-72 flex-shrink-0">
-            <div className="bg-white rounded-3xl p-4 sm:p-5 shadow-sm border border-slate-200/80 sticky top-24 space-y-2">
-              <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 px-3 block mb-1">
-                Table of Contents
-              </span>
-              
-              <div className="flex flex-row lg:flex-col gap-1.5 overflow-x-auto no-scrollbar pb-1 lg:pb-0">
-                {sections.map((sec) => {
-                  const Icon = sec.icon;
-                  const isSelected = activeSection === sec.id;
-                  return (
-                    <button
-                      key={sec.id}
-                      onClick={() => setActiveSection(sec.id)}
-                      className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl font-bold text-xs transition-all flex-shrink-0 text-left ${
-                        isSelected
-                          ? 'bg-primary-600 text-white shadow-md shadow-primary-200'
-                          : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-                      }`}
-                    >
-                      <Icon className="h-4 w-4" />
-                      <span className="truncate">{sec.title}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          </aside>
+      <div className="container-page mt-10 flex flex-col gap-10 lg:flex-row lg:gap-16">
+        <aside className="w-full flex-shrink-0 lg:w-48">
+          <div className="lg:sticky lg:top-24">
+            <h2 className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted">
+              Contents
+            </h2>
+            <nav className="mt-3 flex flex-row flex-wrap gap-x-4 gap-y-2 lg:flex-col lg:gap-2">
+              {sections.map((sec) => (
+                <button
+                  key={sec.id}
+                  onClick={() => setActiveSection(sec.id)}
+                  aria-current={activeSection === sec.id ? 'true' : undefined}
+                  className={`text-left text-[13px] transition-colors ${
+                    activeSection === sec.id
+                      ? 'font-medium text-ink'
+                      : 'text-muted hover:text-ink'
+                  }`}
+                >
+                  {sec.title}
+                </button>
+              ))}
+            </nav>
+          </div>
+        </aside>
 
-          {/* Content Pane */}
-          <main className="flex-1 space-y-6">
-            
-            {/* SECTION 1: Overview */}
-            {activeSection === 'overview' && (
-              <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-sm border border-slate-200/80 space-y-6">
+        <main className="min-w-0 max-w-[68ch] flex-1">
+          {activeSection === 'overview' && (
+            <section>
+              <h2 className="text-2xl font-semibold tracking-[-0.02em]">Overview</h2>
+              <p className="mt-4 text-[15px] leading-[1.75] text-muted">
+                Tutor Hub is a one-to-one tutoring marketplace for high school and
+                university students in Nepal. Students compare educators by subject, level,
+                rate, and rating, then book a live session.
+              </p>
+
+              <div className="mt-8 grid gap-8 border-t border-line pt-6 sm:grid-cols-2">
                 <div>
-                  <h2 className="text-2xl font-black text-slate-900 tracking-tight">Platform Overview</h2>
-                  <p className="text-sm text-slate-500 mt-1 leading-relaxed">
-                    Tutor Hub is an interactive, personalized 1-on-1 tutoring platform built for high school and university students.
+                  <h3 className="text-sm font-medium text-ink">For students</h3>
+                  <p className="mt-2 text-[13px] leading-relaxed text-muted">
+                    Browse sample profiles, walk through booking, and explore the classroom
+                    at your own pace. Saved sessions and tutors stay in your browser.
                   </p>
                 </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                  <div className="p-5 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
-                    <span className="text-xs font-bold text-primary-700 uppercase tracking-wider">For Students</span>
-                    <h3 className="font-bold text-slate-900 text-base">Personalized Mentorship</h3>
-                    <p className="text-xs text-slate-600 leading-relaxed">
-                      Search verified educators by subject, grade level, and budget. Book instant sessions with escrow protection and learn at your own pace.
-                    </p>
-                  </div>
-
-                  <div className="p-5 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
-                    <span className="text-xs font-bold text-indigo-700 uppercase tracking-wider">For Educators</span>
-                    <h3 className="font-bold text-slate-900 text-base">Teach & Earn</h3>
-                    <p className="text-xs text-slate-600 leading-relaxed">
-                      Manage incoming booking requests, host virtual sessions, set your own hourly rates, and receive verified digital wallet payouts.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* SECTION 2: Virtual Classroom */}
-            {activeSection === 'classroom' && (
-              <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-sm border border-slate-200/80 space-y-6">
                 <div>
-                  <h2 className="text-2xl font-black text-slate-900 tracking-tight">3D Virtual Classroom Guide</h2>
-                  <p className="text-sm text-slate-500 mt-1 leading-relaxed">
-                    How to make the most of the live video classroom, drawing tools, and collaborative notes.
+                  <h3 className="text-sm font-medium text-ink">For educators</h3>
+                  <p className="mt-2 text-[13px] leading-relaxed text-muted">
+                    Preview incoming requests, host a sample session, and set an hourly rate
+                    in NPR. Payouts are not connected in this demo.
                   </p>
                 </div>
+              </div>
+            </section>
+          )}
 
-                <div className="space-y-4 text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                    <h4 className="font-bold text-slate-900 mb-1">1. High-DPI Whiteboard</h4>
-                    <p className="text-xs text-slate-500">
-                      Equipped with quadratic Bézier curve smoothing for tablet styluses, multiple pen colors, thickness control, and 1-click PNG export.
-                    </p>
+          {activeSection === 'classroom' && (
+            <section>
+              <h2 className="text-2xl font-semibold tracking-[-0.02em]">Classroom</h2>
+              <p className="mt-4 text-[15px] leading-[1.75] text-muted">
+                A live session combines video, a shared whiteboard, chat, notes, and a
+                scripted study assistant in one workspace.
+              </p>
+
+              <dl className="mt-8 border-t border-line">
+                {[
+                  {
+                    term: 'Whiteboard',
+                    detail:
+                      'Smooth pointer drawing with several pen colours, an eraser, stroke width control, and PNG export.',
+                  },
+                  {
+                    term: 'Camera and screen share',
+                    detail:
+                      'Toggle your webcam or share a window for problem set reviews. Quality depends on your device and connection.',
+                  },
+                  {
+                    term: 'Notes and chat',
+                    detail:
+                      'Lesson notes stay in the browser tab. Chat messages are local sample data and are not delivered to anyone.',
+                  },
+                ].map((item) => (
+                  <div key={item.term} className="border-b border-line py-4">
+                    <dt className="text-sm font-medium text-ink">{item.term}</dt>
+                    <dd className="mt-1 text-[13px] leading-relaxed text-muted">
+                      {item.detail}
+                    </dd>
                   </div>
+                ))}
+              </dl>
 
-                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                    <h4 className="font-bold text-slate-900 mb-1">2. Hardware Video & Screen Share</h4>
-                    <p className="text-xs text-slate-500">
-                      Toggle your real webcam or share your browser window for problem set reviews.
-                    </p>
-                  </div>
+              <Link to="/classroom/s1" className="btn btn-outline btn-sm mt-6">
+                Open the classroom demo
+              </Link>
+            </section>
+          )}
 
-                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                    <h4 className="font-bold text-slate-900 mb-1">3. In-Call AI Assistant</h4>
-                    <p className="text-xs text-slate-500">
-                      Ask the AI Copilot to break down theorems or generate practice questions on the fly without leaving the room.
-                    </p>
-                  </div>
-                </div>
+          {activeSection === 'booking' && (
+            <section>
+              <h2 className="text-2xl font-semibold tracking-[-0.02em]">
+                Booking and checkout
+              </h2>
+              <p className="mt-4 text-[15px] leading-[1.75] text-muted">
+                Pick a subject, date, time, and duration, then walk through a sample payment
+                step. Nothing is charged and no provider is contacted.
+              </p>
 
-                <div className="pt-2">
-                  <Link
-                    to="/classroom/s1"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md transition-all"
+              <div className="mt-8 border-t border-line">
+                {paymentMethods.map((method) => (
+                  <div
+                    key={method.name}
+                    className="flex items-baseline justify-between gap-4 border-b border-line py-3"
                   >
-                    Test Live Classroom Now →
-                  </Link>
-                </div>
+                    <span className="text-sm text-ink">{method.name}</span>
+                    <span className="text-[12px] text-muted">{method.detail}</span>
+                  </div>
+                ))}
               </div>
-            )}
 
-            {/* SECTION 3: Booking & Payments */}
-            {activeSection === 'booking' && (
-              <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-sm border border-slate-200/80 space-y-6">
-                <div>
-                  <h2 className="text-2xl font-black text-slate-900 tracking-tight">Booking & Escrow Payments</h2>
-                  <p className="text-sm text-slate-500 mt-1 leading-relaxed">
-                    Transparent pricing in NPR with zero hidden commissions.
-                  </p>
-                </div>
+              <p className="mt-5 border-y border-line py-4 text-[13px] leading-relaxed text-muted">
+                Choosing a method creates a sample booking in your browser so you can see
+                the dashboard flow. No funds move, no escrow is used, and no refunds are
+                processed.
+              </p>
+            </section>
+          )}
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="p-4 rounded-2xl bg-purple-50 border border-purple-100 text-center">
-                    <h4 className="font-black text-purple-900 text-sm">Khalti Wallet</h4>
-                    <p className="text-xs text-purple-700 mt-1">Instant mobile wallet checkout</p>
-                  </div>
-                  <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-100 text-center">
-                    <h4 className="font-black text-emerald-900 text-sm">eSewa Direct</h4>
-                    <p className="text-xs text-emerald-700 mt-1">Secure Nepali mobile banking</p>
-                  </div>
-                  <div className="p-4 rounded-2xl bg-indigo-50 border border-indigo-100 text-center">
-                    <h4 className="font-black text-indigo-900 text-sm">Visa & Mastercard</h4>
-                    <p className="text-xs text-indigo-700 mt-1">International card payments</p>
-                  </div>
-                </div>
-
-                <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200/60 text-xs text-amber-900 leading-relaxed flex items-start gap-3">
-                  <ShieldCheck className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <span className="font-bold">Escrow Protection:</span> When you schedule a lesson, funds are locked in escrow. The tutor is only paid once the session has concluded successfully. You can cancel with a full refund up to 12 hours prior to the lesson.
-                  </div>
-                </div>
+          {activeSection === 'ai' && (
+            <section>
+              <div className="flex flex-wrap items-center gap-3">
+                <h2 className="text-2xl font-semibold tracking-[-0.02em]">
+                  AI study assistant
+                </h2>
+                <DemoBadge label="Scripted responses" />
               </div>
-            )}
+              <p className="mt-4 text-[15px] leading-[1.75] text-muted">
+                The assistant is a scripted preview. It returns canned answers and is not
+                connected to a language model.
+              </p>
 
-            {/* SECTION 4: AI Copilot */}
-            {activeSection === 'ai' && (
-              <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-sm border border-slate-200/80 space-y-6">
-                <div>
-                  <h2 className="text-2xl font-black text-slate-900 tracking-tight">AI Study Copilot</h2>
-                  <p className="text-sm text-slate-500 mt-1 leading-relaxed">
-                    Your personal 24/7 academic assistant powered by state-of-the-art language models.
-                  </p>
-                </div>
-
-                <div className="space-y-3 text-xs text-slate-600">
-                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                    <span className="font-bold text-slate-900">⚡ Step-by-Step Problem Solving:</span> Breaks down complex differential equations and physics derivations into bite-sized steps.
+              <dl className="mt-8 border-t border-line">
+                {[
+                  {
+                    term: 'Step-by-step problem solving',
+                    detail: 'Shows how a guided walkthrough of a formula could look.',
+                  },
+                  {
+                    term: 'Practice questions',
+                    detail: 'Returns sample prompts based on the selected topic.',
+                  },
+                  {
+                    term: 'Lesson summaries',
+                    detail: 'Previews how key takeaways could be collected after a lesson.',
+                  },
+                ].map((item) => (
+                  <div key={item.term} className="border-b border-line py-4">
+                    <dt className="text-sm font-medium text-ink">{item.term}</dt>
+                    <dd className="mt-1 text-[13px] leading-relaxed text-muted">
+                      {item.detail}
+                    </dd>
                   </div>
-                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                    <span className="font-bold text-slate-900">🎯 Practice Question Generator:</span> Generates tailor-made exam questions tailored to your current topic.
+                ))}
+              </dl>
+            </section>
+          )}
+
+          {activeSection === 'faq' && (
+            <section>
+              <h2 className="text-2xl font-semibold tracking-[-0.02em]">Questions</h2>
+
+              <dl className="mt-6 border-t border-line">
+                {faqs.map((faq) => (
+                  <div key={faq.q} className="border-b border-line py-4">
+                    <dt className="text-sm font-medium text-ink">{faq.q}</dt>
+                    <dd className="mt-1.5 text-[13px] leading-relaxed text-muted">
+                      {faq.a}
+                    </dd>
                   </div>
-                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                    <span className="font-bold text-slate-900">📋 Automatic Lesson Summaries:</span> Consolidates main formulas and key takeaways after each lesson.
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* SECTION 5: FAQs */}
-            {activeSection === 'faq' && (
-              <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-sm border border-slate-200/80 space-y-6">
-                <div>
-                  <h2 className="text-2xl font-black text-slate-900 tracking-tight">Frequently Asked Questions</h2>
-                  <p className="text-sm text-slate-500 mt-1">Quick answers to common questions.</p>
-                </div>
-
-                <div className="space-y-3">
-                  {[
-                    { q: 'How do I join my scheduled class?', a: 'Go to your Student Dashboard and tap "Join Live Classroom". You will immediately be connected to your mentor.' },
-                    { q: 'Can I download the whiteboard notes after class?', a: 'Yes! Simply click "Save Notes" at the top of the classroom to download a high-resolution PNG of everything drawn during the session.' },
-                    { q: 'Are tutors verified?', a: 'Every tutor undergoes background qualification checks and syllabus verification before their profile is marked Verified on Tutor Hub.' },
-                  ].map((faq, i) => (
-                    <div key={i} className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
-                      <h4 className="font-bold text-slate-900 text-xs sm:text-sm">{faq.q}</h4>
-                      <p className="text-xs text-slate-500 leading-relaxed">{faq.a}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-          </main>
-        </div>
+                ))}
+              </dl>
+            </section>
+          )}
+        </main>
       </div>
     </div>
   );

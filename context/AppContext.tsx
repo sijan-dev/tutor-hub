@@ -1,7 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Session, Tutor, User, Review, AppNotification } from '../types';
-import { MOCK_STUDENT_SESSIONS, MOCK_TUTORS, MOCK_USERS, MOCK_REVIEWS, MOCK_NOTIFICATIONS } from '../constants';
-import { sounds } from '../utils/soundEffects';
+import {
+  MOCK_STUDENT_SESSIONS,
+  MOCK_TUTORS,
+  MOCK_USERS,
+  MOCK_REVIEWS,
+  MOCK_NOTIFICATIONS,
+} from '../constants';
 
 interface AppContextType {
   currentUser: User | null;
@@ -33,7 +38,6 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Current user session
   const [currentUser, setCurrentUser] = useState<User | null>(() => {
     const saved = localStorage.getItem('tutorHubUser');
     if (saved) {
@@ -43,7 +47,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         return null;
       }
     }
-    // If legacy role exists, initialize a default demo user
     const legacyRole = localStorage.getItem('tutorHubRole') as 'student' | 'tutor' | null;
     if (legacyRole && MOCK_USERS[legacyRole]) {
       return MOCK_USERS[legacyRole];
@@ -103,7 +106,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return localStorage.getItem('tutorHubTheme') === 'dark';
   });
 
-  // Sync user & role
   useEffect(() => {
     if (currentUser) {
       localStorage.setItem('tutorHubUser', JSON.stringify(currentUser));
@@ -151,50 +153,46 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const toggleDarkMode = () => {
     setDarkMode((prev) => !prev);
-    try {
-      sounds.playClick();
-    } catch {}
   };
 
   const setRole = (newRole: 'student' | 'tutor' | null) => {
     setRoleState(newRole);
     if (currentUser && newRole && currentUser.role !== newRole) {
-      // Switch active user demo persona if switching roles
       const mockUser = MOCK_USERS[newRole];
       if (mockUser) {
         setCurrentUser(mockUser);
       } else {
-        setCurrentUser((prev) => prev ? { ...prev, role: newRole } : null);
+        setCurrentUser((prev) => (prev ? { ...prev, role: newRole } : null));
       }
     }
   };
 
-  const login = async (email: string, _password?: string, preferredRole?: 'student' | 'tutor'): Promise<User> => {
-    // Check if user exists in saved users registry
+  const login = async (
+    email: string,
+    _password?: string,
+    preferredRole?: 'student' | 'tutor'
+  ): Promise<User> => {
     const savedUsersStr = localStorage.getItem('tutorHubRegisteredUsers');
     const registeredUsers: User[] = savedUsersStr ? JSON.parse(savedUsersStr) : [];
-    const matched = registeredUsers.find((u) => u.email.toLowerCase() === email.toLowerCase());
+    const matched = registeredUsers.find(
+      (u) => u.email.toLowerCase() === email.toLowerCase()
+    );
 
     if (matched) {
       setCurrentUser(matched);
       setRoleState(matched.role);
-      try {
-        sounds.playSuccess();
-      } catch {}
       return matched;
     }
 
-    // Fallback to demo profiles
-    const roleToUse = preferredRole || (email.includes('tutor') || email.includes('rajesh') ? 'tutor' : 'student');
+    const roleToUse =
+      preferredRole ||
+      (email.includes('tutor') || email.includes('rajesh') ? 'tutor' : 'student');
     const demoUser: User = {
       ...MOCK_USERS[roleToUse],
       email: email || MOCK_USERS[roleToUse].email,
     };
     setCurrentUser(demoUser);
     setRoleState(demoUser.role);
-    try {
-      sounds.playSuccess();
-    } catch {}
     return demoUser;
   };
 
@@ -204,9 +202,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       name: userData.name || 'New User',
       email: userData.email || 'user@example.com',
       role: userData.role || 'student',
-      avatar: userData.avatar || (userData.role === 'tutor' 
-        ? 'https://picsum.photos/seed/' + Date.now() + '/200/200' 
-        : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80'),
+      avatar:
+        userData.avatar ||
+        (userData.role === 'tutor'
+          ? 'https://picsum.photos/seed/' + Date.now() + '/200/200'
+          : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80'),
       gradeLevel: userData.gradeLevel,
       subjects: userData.subjects,
       hourlyRate: userData.hourlyRate,
@@ -215,7 +215,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       createdAt: new Date().toISOString().split('T')[0],
     };
 
-    // Store in registered users
     const savedUsersStr = localStorage.getItem('tutorHubRegisteredUsers');
     const registeredUsers: User[] = savedUsersStr ? JSON.parse(savedUsersStr) : [];
     registeredUsers.push(newUser);
@@ -224,19 +223,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setCurrentUser(newUser);
     setRoleState(newUser.role);
 
-    // Send a welcome notification
     addNotification({
-      title: `Welcome to Tutor Hub 3D, ${newUser.name}! 🎉`,
-      message: newUser.role === 'student' 
-        ? 'Your student account is active. Explore verified educators and schedule your first 3D live session.' 
-        : 'Your tutor profile is live! Set your available slots and start receiving session requests.',
+      title: `Welcome to Tutor Hub, ${newUser.name}`,
+      message:
+        newUser.role === 'student'
+          ? 'Your demo student account is ready. Explore sample educator profiles and try a session.'
+          : 'Your demo educator profile is ready. Preview sample requests and explore the classroom.',
       type: 'system',
       link: newUser.role === 'student' ? '/find-tutors' : '/tutor-dashboard',
     });
 
-    try {
-      sounds.playSuccess();
-    } catch {}
     return newUser;
   };
 
@@ -245,16 +241,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setRoleState(null);
     localStorage.removeItem('tutorHubUser');
     localStorage.removeItem('tutorHubRole');
-    try {
-      sounds.playClick();
-    } catch {}
   };
 
   const updateProfile = (updates: Partial<User>) => {
     if (!currentUser) return;
     const updated = { ...currentUser, ...updates };
     setCurrentUser(updated);
-    // Update registered list if exists
     const savedUsersStr = localStorage.getItem('tutorHubRegisteredUsers');
     if (savedUsersStr) {
       try {
@@ -273,10 +265,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
     setSessions((prev) => [newSession, ...prev]);
 
-    // Send notification
     addNotification({
-      title: 'Booking Confirmed! 📅',
-      message: `Your session for ${newSession.subject} with ${newSession.tutorName} on ${newSession.date} at ${newSession.time} is scheduled.`,
+      title: 'Booking confirmed',
+      message: `Your ${newSession.subject} session with ${newSession.tutorName} is scheduled for ${newSession.date} at ${newSession.time}.`,
       type: 'booking',
       link: '/student-dashboard',
     });
@@ -287,22 +278,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       prev.map((s) => (s.id === id ? { ...s, status: 'Cancelled' as const } : s))
     );
     addNotification({
-      title: 'Session Cancelled',
-      message: 'A booked session was cancelled. A refund or reschedule credit is available.',
+      title: 'Session cancelled',
+      message: 'This demo session is marked cancelled. No payment or refund is involved.',
       type: 'reminder',
       link: '/student-dashboard',
     });
-    try {
-      sounds.playCancel();
-    } catch {}
   };
 
   const toggleSaveTutor = (id: string) => {
     setSavedTutorIds((prev) => {
       const isSaved = prev.includes(id);
-      try {
-        sounds.playClick();
-      } catch {}
       return isSaved ? prev.filter((item) => item !== id) : [...prev, id];
     });
   };
@@ -317,37 +302,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
     setReviews((prev) => [newReview, ...prev]);
 
-    // Add notification
     addNotification({
-      title: 'Review Published ⭐',
-      message: `Your ${reviewData.rating}-star review for tutor was submitted successfully. Thank you!`,
+      title: 'Review published',
+      message: `Your ${reviewData.rating}-star review was submitted. Thank you.`,
       type: 'system',
       link: `/tutor/${reviewData.tutorId}`,
     });
-
-    try {
-      sounds.playSuccess();
-    } catch {}
   };
 
   const markNotificationAsRead = (id: string) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, read: true } : n))
-    );
+    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
   };
 
   const markAllNotificationsAsRead = () => {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
-    try {
-      sounds.playClick();
-    } catch {}
   };
 
   const clearNotifications = () => {
     setNotifications([]);
-    try {
-      sounds.playClick();
-    } catch {}
   };
 
   const addNotification = (notif: Omit<AppNotification, 'id' | 'time' | 'read'>) => {

@@ -1,18 +1,33 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Calendar, DollarSign, MessageSquare, Edit2, User, Clock, CheckCircle, Video, TrendingUp, Sparkles } from 'lucide-react';
+import { Edit2, Video } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { useApp } from '../context/AppContext';
-import confetti from 'canvas-confetti';
+import DemoBadge from '../components/DemoBadge';
 
 const TutorDashboard: React.FC = () => {
   const navigate = useNavigate();
-  const { sessions, currentUser } = useApp();
+  const { sessions, currentUser, darkMode } = useApp();
   const tutorName = currentUser?.name || 'Rajesh Sharma';
   const tutorAvatar = currentUser?.avatar || 'https://picsum.photos/seed/rajesh/200/200';
+
   const [pendingRequests, setPendingRequests] = useState([
-    { id: 'req-1', student: 'Sita Karki', subject: 'Advanced Calculus', duration: '1 Hour', fee: 1500, time: 'Tomorrow @ 11:00 AM' },
-    { id: 'req-2', student: 'Bikram Thapa', subject: 'Quantum Physics', duration: '2 Hours', fee: 3000, time: 'Wednesday @ 3:00 PM' },
+    {
+      id: 'req-1',
+      student: 'Sita Karki',
+      subject: 'Advanced Calculus',
+      duration: '1 hour',
+      fee: 1500,
+      time: 'Tomorrow, 11:00 AM',
+    },
+    {
+      id: 'req-2',
+      student: 'Bikram Thapa',
+      subject: 'Quantum Physics',
+      duration: '2 hours',
+      fee: 3000,
+      time: 'Wednesday, 3:00 PM',
+    },
   ]);
 
   const [notification, setNotification] = useState<string | null>(null);
@@ -30,16 +45,23 @@ const TutorDashboard: React.FC = () => {
   ];
 
   const messages = [
-    { id: 1, student: 'Aayush Tamang', text: 'Hi sir, can we focus on Calculus in the next session?', time: '2 mins ago', unread: true },
-    { id: 2, student: 'Priya Maharjan', text: 'Thanks for the notes! They were really helpful.', time: '1 hour ago', unread: false },
+    {
+      id: 1,
+      student: 'Aayush Tamang',
+      text: 'Can we focus on calculus in the next session?',
+      time: '2 min ago',
+    },
+    {
+      id: 2,
+      student: 'Priya Maharjan',
+      text: 'Thanks for the notes, they were helpful.',
+      time: '1 hour ago',
+    },
   ];
 
   const handleAcceptRequest = (id: string, name: string) => {
     setPendingRequests((prev) => prev.filter((r) => r.id !== id));
-    setNotification(`Accepted request from ${name}! Booking has been confirmed.`);
-    try {
-      confetti({ particleCount: 50, spread: 60, origin: { y: 0.5 } });
-    } catch {}
+    setNotification(`Request from ${name} accepted. Sample booking confirmed.`);
     setTimeout(() => setNotification(null), 4000);
   };
 
@@ -50,314 +72,296 @@ const TutorDashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 pb-16">
-      
-      {/* Toast Notification Banner */}
+    <div className="page pb-20">
       {notification && (
-        <div className="fixed top-20 right-6 z-50 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 text-xs font-bold animate-bounce">
-          <Sparkles className="h-4 w-4 text-amber-400" />
-          <span>{notification}</span>
+        <div
+          role="status"
+          className="fixed bottom-5 left-5 right-5 z-50 border border-line bg-surface px-4 py-3 text-[13px] text-ink sm:left-auto sm:w-auto sm:max-w-sm"
+        >
+          {notification}
         </div>
       )}
 
-      {/* Tutor Dashboard Header */}
-      <div className="bg-white border-b border-slate-200/80 px-4 sm:px-6 lg:px-8 py-8 mb-8 shadow-sm">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-5">
-            <div className="relative">
+      <div className="container-page pt-10 sm:pt-12">
+        <header className="flex flex-col justify-between gap-6 border-b border-line pb-8 sm:flex-row sm:items-end">
+          <div className="flex items-start gap-4">
+            <div className="relative flex-shrink-0">
               <img
                 src={tutorAvatar}
-                alt={tutorName}
-                className="h-20 w-20 rounded-2xl object-cover border-2 border-primary-200 shadow-md ring-2 ring-primary-50"
+                alt=""
+                className="h-16 w-16 rounded-[2px] object-cover"
               />
-              <span className="absolute -bottom-1 -right-1 px-2 py-0.5 bg-emerald-500 text-white text-[9px] font-black rounded-full uppercase tracking-wider">
-                Online
-              </span>
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">{tutorName}</h1>
-                <span className="bg-primary-50 text-primary-700 text-xs px-2.5 py-0.5 rounded-full font-bold border border-primary-200">
-                  Verified Educator
-                </span>
+              <div className="flex flex-wrap items-center gap-3">
+                <h1 className="text-[2rem] font-semibold leading-none tracking-[-0.03em]">
+                  {tutorName}
+                </h1>
+                <DemoBadge label="Demo dashboard" />
               </div>
-              <p className="text-slate-500 text-xs sm:text-sm mt-1 font-medium">
-                {currentUser?.bio || 'Senior Mathematics & Physics Specialist • M.Sc. Tribhuvan University'}
+              <p className="mt-2 max-w-md text-[13px] leading-relaxed text-muted">
+                {currentUser?.bio ||
+                  'Senior mathematics and physics specialist, Tribhuvan University.'}
               </p>
             </div>
           </div>
-          
-          <div className="flex items-center gap-3">
-            <button 
-              onClick={() => setShowProfileModal(true)}
-              className="flex items-center gap-2 px-4 py-2.5 border border-slate-200 hover:bg-slate-50 rounded-xl text-xs font-bold transition-colors text-slate-700 shadow-sm"
+
+          <button
+            onClick={() => setShowProfileModal(true)}
+            className="btn btn-outline btn-sm"
+          >
+            <Edit2 className="h-3.5 w-3.5" />
+            Edit profile
+          </button>
+        </header>
+
+        <div className="grid grid-cols-1 border-b border-line sm:grid-cols-3">
+          {[
+            { label: 'Active bookings', value: sessions.length + 2, note: 'Sample count' },
+            { label: 'Total earnings', value: 'NPR 28,500', note: 'Payouts not connected' },
+            { label: 'Student rating', value: '4.9 / 5.0', note: 'Sample rating' },
+          ].map((stat, i) => (
+            <div
+              key={stat.label}
+              className={`py-5 sm:px-6 ${i > 0 ? 'border-t border-line sm:border-l sm:border-t-0' : ''} ${
+                i === 0 ? 'sm:pl-0' : ''
+              }`}
             >
-              <Edit2 className="h-4 w-4" />
-              Tutor Profile Settings
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Stats Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200/80 flex items-start justify-between">
-            <div>
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Active Bookings</span>
-              <p className="text-3xl font-black text-slate-900 mt-2">{sessions.length + 2}</p>
-              <span className="text-[11px] text-emerald-600 font-bold mt-1 inline-flex items-center gap-1">
-                <TrendingUp className="h-3 w-3" /> +18% this month
-              </span>
+              <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted">
+                {stat.label}
+              </div>
+              <div className="mt-1.5 text-2xl font-semibold tabular-nums tracking-[-0.02em]">
+                {stat.value}
+              </div>
+              <div className="mt-1 text-[11px] text-muted">{stat.note}</div>
             </div>
-            <div className="p-3 bg-primary-50 rounded-2xl text-primary-600">
-              <Calendar className="h-6 w-6" />
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200/80 flex items-start justify-between">
-            <div>
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Earnings</span>
-              <p className="text-3xl font-black text-slate-900 mt-2">NPR 28,500</p>
-              <span className="text-[11px] text-emerald-600 font-bold mt-1 inline-flex items-center gap-1">
-                <TrendingUp className="h-3 w-3" /> Next payout in 2 days
-              </span>
-            </div>
-            <div className="p-3 bg-emerald-50 rounded-2xl text-emerald-600">
-              <DollarSign className="h-6 w-6" />
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200/80 flex items-start justify-between">
-            <div>
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Student Rating</span>
-              <p className="text-3xl font-black text-slate-900 mt-2">4.9 / 5.0</p>
-              <span className="text-[11px] text-amber-600 font-bold mt-1 inline-block">
-                Top Rated Educator 🏆
-              </span>
-            </div>
-            <div className="p-3 bg-amber-50 rounded-2xl text-amber-600">
-              <User className="h-6 w-6" />
-            </div>
-          </div>
+          ))}
         </div>
 
-        {/* Main Columns */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-          
-          {/* Left Column: Schedule & Analytics */}
-          <div className="lg:col-span-2 space-y-8">
-            
-            {/* Upcoming Sessions List */}
-            <div className="bg-white rounded-3xl shadow-sm border border-slate-200/80 p-6 sm:p-8">
-              <div className="flex justify-between items-center mb-6">
-                <div>
-                  <h2 className="text-xl font-black text-slate-900 tracking-tight">Confirmed Schedule</h2>
-                  <p className="text-xs text-slate-400 font-medium">Upcoming 1-on-1 student classroom sessions</p>
-                </div>
-              </div>
+        <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-14">
+          <div className="space-y-12">
+            <section>
+              <h2 className="text-lg font-semibold tracking-[-0.01em]">Confirmed schedule</h2>
 
-              <div className="space-y-4">
-                <div className="border border-slate-200/80 rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row justify-between items-start md:items-center hover:border-primary-200 transition-colors gap-4">
-                  <div>
-                    <span className="bg-primary-50 text-primary-700 text-xs font-bold px-2.5 py-0.5 rounded-full">
-                      Mathematics
-                    </span>
-                    <h3 className="font-bold text-base text-slate-900 mt-1">Aayush Tamang</h3>
-                    <div className="mt-1 text-xs text-slate-500 flex items-center gap-3">
-                      <span>📅 Tomorrow @ 10:00 AM</span>
-                      <span>• 1 Hour (NPR 1,500)</span>
+              <div className="mt-3 border-y border-line">
+                {[
+                  {
+                    id: 'session-aayush',
+                    subject: 'Mathematics',
+                    student: 'Aayush Tamang',
+                    time: 'Tomorrow, 10:00 AM',
+                    detail: '1 hour · NPR 1,500',
+                  },
+                  {
+                    id: 'session-priya',
+                    subject: 'Physics',
+                    student: 'Priya Maharjan',
+                    time: 'Thursday, 2:00 PM',
+                    detail: '1.5 hours · NPR 2,250',
+                  },
+                ].map((session) => (
+                  <article
+                    key={session.id}
+                    className="flex flex-col gap-4 border-t border-line py-4 first:border-t-0 sm:flex-row sm:items-center sm:justify-between"
+                  >
+                    <div>
+                      <h3 className="text-sm font-medium text-ink">{session.student}</h3>
+                      <p className="mt-0.5 text-[12px] text-muted">{session.subject}</p>
+                      <div className="mt-1 text-[12px] text-muted">
+                        {session.time} · {session.detail}
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-2 w-full md:w-auto">
-                    <button 
-                      onClick={() => navigate('/classroom/session-aayush')}
-                      className="flex-1 md:flex-none px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 shadow-sm transition-all hover:scale-105"
+                    <button
+                      onClick={() => navigate(`/classroom/${session.id}`)}
+                      className="btn btn-outline btn-sm"
                     >
-                      <Video className="h-3.5 w-3.5" /> Launch Classroom
+                      <Video className="h-3.5 w-3.5" />
+                      Launch classroom
                     </button>
-                  </div>
-                </div>
-
-                <div className="border border-slate-200/80 rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row justify-between items-start md:items-center hover:border-primary-200 transition-colors gap-4">
-                  <div>
-                    <span className="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-0.5 rounded-full">
-                      Physics
-                    </span>
-                    <h3 className="font-bold text-base text-slate-900 mt-1">Priya Maharjan</h3>
-                    <div className="mt-1 text-xs text-slate-500 flex items-center gap-3">
-                      <span>📅 Thursday @ 2:00 PM</span>
-                      <span>• 1.5 Hours (NPR 2,250)</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2 w-full md:w-auto">
-                    <button 
-                      onClick={() => navigate('/classroom/session-priya')}
-                      className="flex-1 md:flex-none px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 shadow-sm transition-all hover:scale-105"
-                    >
-                      <Video className="h-3.5 w-3.5" /> Launch Classroom
-                    </button>
-                  </div>
-                </div>
+                  </article>
+                ))}
               </div>
-            </div>
+            </section>
 
-            {/* Weekly Earnings Chart */}
-            <div className="bg-white rounded-3xl shadow-sm border border-slate-200/80 p-6 sm:p-8">
-              <div className="flex justify-between items-center mb-6">
-                <div>
-                  <h2 className="text-xl font-black text-slate-900 tracking-tight">Weekly Performance Chart</h2>
-                  <p className="text-xs text-slate-400 font-medium">Session revenues recorded in NPR</p>
-                </div>
+            <section>
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <h2 className="text-lg font-semibold tracking-[-0.01em]">
+                  Weekly earnings
+                </h2>
+                <span className="text-[11px] text-muted">Sample data, NPR</span>
               </div>
-              <div className="h-64 w-full">
+
+              <div className="mt-4 h-56 w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={chartData}>
-                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} />
-                    <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} />
-                    <Tooltip
-                      cursor={{ fill: '#f1f5f9' }}
-                      contentStyle={{ borderRadius: '16px', border: '1px solid #e2e8f0', boxShadow: '0 8px 30px rgba(0,0,0,0.06)' }}
+                  <BarChart data={chartData} margin={{ top: 4, right: 0, bottom: 0, left: -20 }}>
+                    <XAxis
+                      dataKey="name"
+                      axisLine={{ stroke: darkMode ? '#34332F' : '#DEDBD3' }}
+                      tickLine={false}
+                      tick={{ fontSize: 11, fill: darkMode ? '#A3A199' : '#66655F' }}
                     />
-                    <Bar dataKey="earnings" fill="#7c3aed" radius={[8, 8, 0, 0]} />
+                    <YAxis
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fontSize: 11, fill: darkMode ? '#A3A199' : '#66655F' }}
+                    />
+                    <Tooltip
+                      cursor={{ fill: darkMode ? 'rgba(240, 238, 232, 0.06)' : 'rgba(23, 24, 26, 0.04)' }}
+                      contentStyle={{
+                        borderRadius: 2,
+                        border: `1px solid ${darkMode ? '#34332F' : '#DEDBD3'}`,
+                        background: darkMode ? '#1C1C1A' : '#FFFFFF',
+                        color: darkMode ? '#F0EEE8' : '#17181A',
+                        fontSize: 12,
+                      }}
+                    />
+                    <Bar dataKey="earnings" fill={darkMode ? '#F0EEE8' : '#17181A'} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
-            </div>
-
+            </section>
           </div>
 
-          {/* Right Column: Pending Requests & Messages */}
-          <div className="lg:col-span-1 space-y-8">
-            
-            {/* Pending Booking Requests */}
-            <div className="bg-white rounded-3xl shadow-sm border border-slate-200/80 p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="font-bold text-slate-900 text-base">Pending Student Inquiries ({pendingRequests.length})</h3>
-                <span className="text-[10px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full">New</span>
+          <div className="space-y-10">
+            <section>
+              <div className="flex items-center justify-between border-b border-line pb-2">
+                <h2 className="text-[14px] font-semibold text-ink">
+                  Pending inquiries ({pendingRequests.length})
+                </h2>
               </div>
 
               {pendingRequests.length > 0 ? (
-                <div className="space-y-3">
+                <div>
                   {pendingRequests.map((req) => (
-                    <div key={req.id} className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-2">
-                      <div className="flex justify-between items-start">
+                    <article key={req.id} className="border-b border-line py-4">
+                      <div className="flex items-start justify-between gap-3">
                         <div>
-                          <h4 className="font-black text-slate-900 text-sm">{req.student}</h4>
-                          <span className="text-xs text-primary-700 font-semibold">{req.subject}</span>
+                          <h3 className="text-sm font-medium text-ink">{req.student}</h3>
+                          <p className="mt-0.5 text-[12px] text-muted">{req.subject}</p>
                         </div>
-                        <span className="text-xs font-black text-emerald-600">NPR {req.fee}</span>
+                        <span className="text-[12px] tabular-nums text-ink">
+                          NPR {req.fee.toLocaleString()}
+                        </span>
                       </div>
-                      <p className="text-[11px] text-slate-500 font-medium">{req.time} • {req.duration}</p>
-                      
-                      <div className="flex gap-2 pt-2">
+                      <p className="mt-1 text-[11px] text-muted">
+                        {req.time} · {req.duration}
+                      </p>
+
+                      <div className="mt-3 flex gap-2">
                         <button
                           onClick={() => handleDeclineRequest(req.id)}
-                          className="flex-1 py-1.5 bg-white border border-slate-200 text-slate-600 hover:bg-rose-50 hover:text-rose-600 rounded-xl text-xs font-bold transition-colors"
+                          className="btn btn-outline btn-sm flex-1"
                         >
                           Decline
                         </button>
                         <button
                           onClick={() => handleAcceptRequest(req.id, req.student)}
-                          className="flex-1 py-1.5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-xs font-bold transition-all shadow-sm"
+                          className="btn btn-primary btn-sm flex-1"
                         >
                           Accept
                         </button>
                       </div>
-                    </div>
+                    </article>
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-8 text-xs text-slate-400">
-                  <CheckCircle className="h-8 w-8 text-emerald-400 mx-auto mb-2" />
-                  All student booking requests have been reviewed!
-                </div>
+                <p className="border-b border-line py-8 text-center text-[12px] text-muted">
+                  No pending inquiries.
+                </p>
               )}
-            </div>
+            </section>
 
-            {/* Direct Messages */}
-            <div className="bg-white rounded-3xl shadow-sm border border-slate-200/80 p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="font-bold text-slate-900 text-base">Student Direct Messages</h3>
-                <MessageSquare className="h-4 w-4 text-slate-400" />
-              </div>
+            <section>
+              <h2 className="border-b border-line pb-2 text-[14px] font-semibold text-ink">
+                Direct messages
+              </h2>
 
-              <div className="space-y-3">
-                {messages.map((msg) => (
-                  <div key={msg.id} className="p-3.5 rounded-2xl bg-slate-50 hover:bg-slate-100/80 border border-slate-100 transition-colors cursor-pointer">
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="font-bold text-xs text-slate-900">{msg.student}</span>
-                      <span className="text-[10px] text-slate-400 font-medium">{msg.time}</span>
-                    </div>
-                    <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">{msg.text}</p>
+              {messages.map((msg) => (
+                <article
+                  key={msg.id}
+                  className="cursor-pointer border-b border-line py-3.5 hover:bg-ink/[0.02]"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <h3 className="text-[13px] font-medium text-ink">{msg.student}</h3>
+                    <span className="text-[10px] text-muted">{msg.time}</span>
                   </div>
-                ))}
-              </div>
-            </div>
-
+                  <p className="mt-1 line-clamp-2 text-[12px] leading-relaxed text-muted">
+                    {msg.text}
+                  </p>
+                </article>
+              ))}
+            </section>
           </div>
-
         </div>
-
       </div>
 
-      {/* Tutor Profile Settings Modal */}
       {showProfileModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl border border-slate-100">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-black text-slate-900">Educator Profile Settings</h3>
-              <button 
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-4">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="profile-settings-title"
+            className="w-full max-w-md rounded-[2px] border border-line bg-surface p-6"
+          >
+            <div className="flex items-start justify-between border-b border-line pb-3">
+              <h2 id="profile-settings-title" className="text-base font-semibold">
+                Profile settings
+              </h2>
+              <button
                 onClick={() => setShowProfileModal(false)}
-                className="text-slate-400 hover:text-slate-600 text-sm font-bold"
+                className="text-[12px] text-muted hover:text-ink"
               >
-                ✕
+                Close
               </button>
             </div>
 
-            <div className="space-y-4 text-xs font-semibold text-slate-700">
+            <div className="mt-5 space-y-4">
               <div>
-                <label className="block mb-1.5 uppercase tracking-wider text-slate-400 text-[10px]">Hourly Rate (NPR)</label>
-                <input 
+                <label htmlFor="rate" className="label">
+                  Hourly rate (NPR)
+                </label>
+                <input
+                  id="rate"
                   type="number"
                   value={hourlyRate}
                   onChange={(e) => setHourlyRate(Number(e.target.value))}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-900 font-bold"
+                  className="input tabular-nums"
                 />
               </div>
 
               <div>
-                <label className="block mb-1.5 uppercase tracking-wider text-slate-400 text-[10px]">Teaching Bio</label>
-                <textarea 
-                  defaultValue="Senior educator with M.Sc. in Physics. Specialized in calculus, mechanics, and exam preparation for high school & college students."
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-900 font-medium"
+                <label htmlFor="bio" className="label">
+                  Teaching bio
+                </label>
+                <textarea
+                  id="bio"
+                  defaultValue="Senior educator with an M.Sc. in Physics. Specialized in calculus, mechanics, and exam preparation for high school and college students."
+                  className="textarea"
                   rows={3}
                 />
               </div>
 
-              <div className="p-3 bg-emerald-50 rounded-xl text-emerald-800 text-[11px] font-bold flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-emerald-600" />
-                <span>Verified Master Tier • Instant payout enabled</span>
-              </div>
+              <p className="border-t border-line pt-3 text-[11px] leading-relaxed text-muted">
+                Demo profile. Verification and payouts are not connected.
+              </p>
             </div>
 
-            <div className="mt-6 pt-4 border-t border-slate-100 flex gap-2">
+            <div className="mt-5 flex justify-end gap-2">
+              <button
+                onClick={() => setShowProfileModal(false)}
+                className="btn btn-outline btn-sm"
+              >
+                Cancel
+              </button>
               <button
                 onClick={() => {
                   setShowProfileModal(false);
-                  setNotification('Profile settings saved successfully!');
+                  setNotification('Demo profile settings updated for this session.');
                   setTimeout(() => setNotification(null), 3000);
                 }}
-                className="flex-1 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-xs font-bold transition-all shadow-md"
+                className="btn btn-primary btn-sm"
               >
-                Save Changes
-              </button>
-              <button
-                onClick={() => setShowProfileModal(false)}
-                className="px-5 py-3 border border-slate-200 text-slate-600 rounded-xl text-xs font-bold hover:bg-slate-50"
-              >
-                Cancel
+                Save changes
               </button>
             </div>
           </div>

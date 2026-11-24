@@ -43,7 +43,6 @@ export interface Session {
 export interface Subject {
   id: string;
   name: string;
-  icon: string;
 }
 
 export interface BookingDetails {

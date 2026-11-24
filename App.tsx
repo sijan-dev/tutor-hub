@@ -32,37 +32,40 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('App Caught Error:', error, errorInfo);
+    console.error('App caught an error:', error, errorInfo);
   }
 
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center p-6 text-center">
-          <div className="bg-slate-800 border border-slate-700 p-8 rounded-3xl max-w-md w-full shadow-2xl">
-            <div className="h-16 w-16 bg-rose-500/20 text-rose-400 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl font-black">
-              ⚠️
-            </div>
-            <h2 className="text-xl font-black text-white mb-2">Something went wrong</h2>
-            <p className="text-xs text-slate-400 mb-6 leading-relaxed">
-              {this.state.error?.message || 'An unexpected rendering error occurred. You can safely return to the home screen.'}
+        <div className="page flex min-h-screen items-center justify-center px-5 py-12">
+          <div className="w-full max-w-md border-y border-line py-10">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-accent">
+              Something broke
             </p>
-            <div className="flex gap-3">
+            <h1 className="mt-3 text-2xl font-semibold tracking-[-0.02em]">
+              This screen could not load.
+            </h1>
+            <p className="mt-3 text-sm leading-relaxed text-muted">
+              {this.state.error?.message ||
+                'An unexpected rendering error occurred. Reload the page to try again.'}
+            </p>
+            <div className="mt-6 flex gap-2">
+              <button
+                onClick={() => window.location.reload()}
+                className="btn btn-primary"
+              >
+                Reload page
+              </button>
               <button
                 onClick={() => {
                   this.setState({ hasError: false, error: null });
                   window.location.hash = '#/';
                   window.location.reload();
                 }}
-                className="flex-1 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-xs font-bold transition-all shadow-md"
+                className="btn btn-outline"
               >
-                Return to Home
-              </button>
-              <button
-                onClick={() => window.location.reload()}
-                className="px-5 py-3 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-xl text-xs font-bold transition-colors"
-              >
-                Reload
+                Go home
               </button>
             </div>
           </div>
@@ -74,11 +77,12 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 }
 
-// Wrapper to conditionally render Navbar & Global AI Widget
 const AppContent: React.FC = () => {
   const location = useLocation();
-  // Hide Navbar on Welcome screen (root path), Auth page, and inside live Classroom
-  const showNavbar = location.pathname !== '/' && location.pathname !== '/auth' && !location.pathname.startsWith('/classroom');
+  const showNavbar =
+    location.pathname !== '/' &&
+    location.pathname !== '/auth' &&
+    !location.pathname.startsWith('/classroom');
 
   return (
     <>
@@ -105,7 +109,7 @@ export function App() {
     <ErrorBoundary>
       <AppProvider>
         <Router>
-          <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans antialiased selection:bg-primary-500 selection:text-white transition-colors duration-200">
+          <div className="min-h-screen bg-paper font-sans text-ink antialiased">
             <AppContent />
           </div>
         </Router>

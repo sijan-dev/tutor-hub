@@ -1,12 +1,12 @@
 import { Tutor, Session, Subject, User, Review, AppNotification } from './types';
 
 export const POPULAR_SUBJECTS: Subject[] = [
-  { id: '1', name: 'Mathematics', icon: '📐' },
-  { id: '2', name: 'Science', icon: '🔬' },
-  { id: '3', name: 'English', icon: '📚' },
-  { id: '4', name: 'Computer Science', icon: '💻' },
-  { id: '5', name: 'Physics', icon: '⚛️' },
-  { id: '6', name: 'Chemistry', icon: '🧪' },
+  { id: '1', name: 'Mathematics' },
+  { id: '2', name: 'Science' },
+  { id: '3', name: 'English' },
+  { id: '4', name: 'Computer Science' },
+  { id: '5', name: 'Physics' },
+  { id: '6', name: 'Chemistry' },
 ];
 
 export const MOCK_TUTORS: Tutor[] = [
@@ -147,7 +147,7 @@ export const MOCK_REVIEWS: Review[] = [
     authorName: 'Sarah Jenkins',
     authorAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80',
     rating: 5,
-    comment: 'Rajesh explained multivariable calculus clearer than my college professor. The 3D visuals and live whiteboard made everything click!',
+    comment: 'Rajesh explained multivariable calculus clearer than my college professor. The live whiteboard made everything click!',
     date: '2 days ago',
   },
   {
@@ -191,7 +191,7 @@ export const MOCK_REVIEWS: Review[] = [
 export const MOCK_NOTIFICATIONS: AppNotification[] = [
   {
     id: 'notif-1',
-    title: 'Session Confirmed! 🚀',
+    title: 'Session confirmed',
     message: 'Your Mathematics session with Rajesh Sharma is confirmed for Dec 25 at 10:00 AM.',
     type: 'booking',
     time: '10m ago',
@@ -200,15 +200,15 @@ export const MOCK_NOTIFICATIONS: AppNotification[] = [
   },
   {
     id: 'notif-2',
-    title: 'AI Copilot Ready 💡',
-    message: 'Tutor Hub 3D Copilot is active. Click the bottom-right bubble anytime for 24/7 AI homework assistance.',
+    title: 'Study assistant available',
+    message: 'Open the assistant from the button in the corner for help reviewing your work.',
     type: 'system',
     time: '1h ago',
     read: false,
   },
   {
     id: 'notif-3',
-    title: 'Upcoming Reminder ⏰',
+    title: 'Session reminder',
     message: 'Physics session with Priya Maharjan begins tomorrow at 2:00 PM.',
     type: 'reminder',
     time: '5h ago',

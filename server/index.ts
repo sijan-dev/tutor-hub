@@ -221,5 +221,5 @@ app.post('/api/reviews', (req: Request, res: Response) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 Tutor Hub API running on http://localhost:${PORT}`);
+  console.log(`Tutor Hub API running on http://localhost:${PORT}`);
 });

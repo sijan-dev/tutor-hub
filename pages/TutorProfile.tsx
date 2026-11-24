@@ -1,35 +1,20 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { 
-  Star, 
-  MapPin, 
-  Clock, 
-  Book, 
-  ArrowLeft, 
-  Send, 
-  Heart, 
-  ShieldCheck, 
-  Sparkles, 
-  CheckCircle2,
-  MessageSquare,
-  ThumbsUp,
-  Award
-} from 'lucide-react';
+import { Star, MapPin, ArrowLeft, Heart, CheckCircle2 } from 'lucide-react';
 import BookingModal from '../components/BookingModal';
+import DemoBadge from '../components/DemoBadge';
 import { useApp } from '../context/AppContext';
-import { sounds } from '../utils/soundEffects';
 
 const TutorProfile: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { tutors, isTutorSaved, toggleSaveTutor, reviews, addReview, currentUser } = useApp();
-  
+
   const tutor = tutors.find((t) => t.id === id) || tutors[0];
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [messageText, setMessageText] = useState('');
   const [messageSent, setMessageSent] = useState(false);
 
-  // Review Form state
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [ratingInput, setRatingInput] = useState(5);
   const [hoverRating, setHoverRating] = useState(0);
@@ -37,19 +22,16 @@ const TutorProfile: React.FC = () => {
   const [reviewAuthor, setReviewAuthor] = useState(currentUser?.name || 'Alex Johnson');
 
   const saved = isTutorSaved(tutor.id);
-
-  // Tutor reviews from context
   const tutorReviews = reviews.filter((r) => r.tutorId === tutor.id);
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (!messageText.trim()) return;
-    try { sounds.playSuccess(); } catch {}
     setMessageSent(true);
     setTimeout(() => {
       setMessageSent(false);
       setMessageText('');
-    }, 3000);
+    }, 4000);
   };
 
   const handleReviewSubmit = (e: React.FormEvent) => {
@@ -58,8 +40,10 @@ const TutorProfile: React.FC = () => {
 
     addReview({
       tutorId: tutor.id,
-      authorName: reviewAuthor.trim() || 'Verified Student',
-      authorAvatar: currentUser?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
+      authorName: reviewAuthor.trim() || 'Demo Student',
+      authorAvatar:
+        currentUser?.avatar ||
+        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
       rating: ratingInput,
       comment: reviewComment.trim(),
     });
@@ -69,313 +53,288 @@ const TutorProfile: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 py-8 px-4 sm:px-6 lg:px-8 transition-colors duration-200">
-      <div className="max-w-6xl mx-auto">
-        
-        {/* Navigation Breadcrumb */}
-        <button 
+    <div className="page pb-20">
+      <div className="container-page pt-8">
+        <button
           onClick={() => navigate(-1)}
-          className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 mb-6 bg-white dark:bg-slate-900 px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm transition-all"
+          className="flex items-center gap-1.5 text-[13px] text-muted hover:text-ink"
         >
-          <ArrowLeft className="h-4 w-4" />
-          Back to Tutors
+          <ArrowLeft className="h-3.5 w-3.5" />
+          Back to tutors
         </button>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
-          {/* Main Info Column */}
-          <div className="lg:col-span-2 space-y-6">
-            
-            {/* Header Card */}
-            <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200/80 dark:border-slate-800 p-6 sm:p-8 relative overflow-hidden transition-colors">
-              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-left">
-                <div className="relative">
-                  <img 
-                    src={tutor.avatar} 
-                    alt={tutor.name} 
-                    className="w-28 h-28 rounded-3xl object-cover border-4 border-white dark:border-slate-800 shadow-lg ring-2 ring-slate-100 dark:ring-slate-700" 
-                  />
-                  <span className="absolute -bottom-2 right-1/2 translate-x-1/2 sm:translate-x-0 sm:right-0 px-2.5 py-0.5 bg-emerald-500 text-white text-[10px] font-bold rounded-full uppercase tracking-wider shadow-sm">
+        <div className="mt-8 grid gap-12 lg:grid-cols-[minmax(0,1fr)_280px] lg:gap-16">
+          <div className="min-w-0">
+            <header className="flex flex-col gap-5 border-b border-line pb-8 sm:flex-row sm:items-start">
+              <img
+                src={tutor.avatar}
+                alt=""
+                className="h-20 w-20 flex-shrink-0 rounded-[2px] object-cover"
+              />
+
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-3">
+                  <h1 className="text-[2rem] font-semibold leading-tight tracking-[-0.03em]">
+                    {tutor.name}
+                  </h1>
+                  <DemoBadge label="Demo profile" />
+                </div>
+
+                <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-muted">
+                  <span className="flex items-center gap-1">
+                    <Star className="h-3.5 w-3.5" />
+                    <span className="tabular-nums text-ink">{tutor.rating.toFixed(1)}</span>
+                    <span>({tutor.reviewCount + tutorReviews.length} reviews)</span>
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <MapPin className="h-3.5 w-3.5" />
+                    {tutor.location}
+                  </span>
+                  <span>{tutor.experience} experience</span>
+                  <span className="flex items-center gap-1.5">
+                    <span
+                      className={`h-1.5 w-1.5 rounded-full ${
+                        tutor.availability === 'Available' ? 'bg-ok' : 'bg-line'
+                      }`}
+                      aria-hidden="true"
+                    />
                     {tutor.availability}
                   </span>
                 </div>
 
-                <div className="flex-1">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight flex items-center justify-center sm:justify-start gap-2">
-                      {tutor.name}
-                      <ShieldCheck className="h-6 w-6 text-primary-600 dark:text-primary-400" title="Verified Educator" />
-                    </h1>
-                    <button
-                      onClick={() => toggleSaveTutor(tutor.id)}
-                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all mx-auto sm:mx-0 ${
-                        saved 
-                          ? 'bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-900/60 text-rose-600 dark:text-rose-400' 
-                          : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 hover:text-rose-500'
-                      }`}
-                    >
-                      <Heart className={`h-4 w-4 ${saved ? 'fill-current text-rose-500' : ''}`} />
-                      {saved ? 'Saved' : 'Save'}
-                    </button>
-                  </div>
-
-                  <div className="flex items-center justify-center sm:justify-start gap-2 mt-2">
-                    <div className="flex items-center gap-1 bg-amber-50 dark:bg-amber-950/40 px-2.5 py-1 rounded-full border border-amber-200/60 dark:border-amber-900/40">
-                      <Star className="h-4 w-4 text-amber-500 fill-current" />
-                      <span className="text-xs font-black text-slate-900 dark:text-white">{tutor.rating}</span>
-                      <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">({tutor.reviewCount + tutorReviews.length} reviews)</span>
-                    </div>
-                    <span className="text-xs text-slate-400 font-medium">•</span>
-                    <span className="text-xs text-slate-600 dark:text-slate-300 font-semibold">{tutor.experience} Experience</span>
-                  </div>
-
-                  <div className="flex flex-wrap justify-center sm:justify-start gap-1.5 mt-4">
-                    {tutor.subjects.map((s) => (
-                      <span key={s} className="px-3 py-1 bg-primary-50 dark:bg-primary-950/50 text-primary-700 dark:text-primary-300 rounded-xl text-xs font-bold border border-primary-100 dark:border-primary-900/50">
-                        {s}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="flex items-center justify-center sm:justify-start gap-4 mt-4 text-xs text-slate-500 dark:text-slate-400 font-medium">
-                    <div className="flex items-center gap-1">
-                      <MapPin className="h-4 w-4 text-primary-600 dark:text-primary-400" />
-                      <span>{tutor.location}</span>
-                    </div>
-                  </div>
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+                  <p className="text-[13px] text-muted">
+                    {tutor.subjects.join(' · ')}
+                  </p>
+                  <button
+                    onClick={() => toggleSaveTutor(tutor.id)}
+                    aria-pressed={saved}
+                    className={`flex items-center gap-1.5 text-[13px] transition-colors ${
+                      saved ? 'text-accent' : 'text-muted hover:text-ink'
+                    }`}
+                  >
+                    <Heart className={`h-3.5 w-3.5 ${saved ? 'fill-current' : ''}`} />
+                    {saved ? 'Saved' : 'Save'}
+                  </button>
                 </div>
               </div>
-            </div>
+            </header>
 
-            {/* About Section */}
-            <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200/80 dark:border-slate-800 p-6 sm:p-8 transition-colors">
-              <h2 className="text-lg font-black text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-primary-600 dark:text-primary-400" /> About the Educator
+            <section className="border-b border-line py-8">
+              <h2 className="text-[14px] font-semibold text-ink">
+                About
               </h2>
-              <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">{tutor.bio}</p>
-            </div>
+              <p className="mt-3 max-w-[65ch] text-[15px] leading-[1.75] text-ink">
+                {tutor.bio}
+              </p>
+            </section>
 
-            {/* Grade Levels Covered */}
-            <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200/80 dark:border-slate-800 p-6 sm:p-8 transition-colors">
-              <h2 className="text-lg font-black text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-                <Award className="h-5 w-5 text-indigo-500" /> Academic Levels Covered
+            <section className="border-b border-line py-8">
+              <h2 className="text-[14px] font-semibold text-ink">
+                Levels covered
               </h2>
-              <div className="flex flex-wrap gap-2">
-                {tutor.gradeLevels.map((gl) => (
-                  <span key={gl} className="px-3.5 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-xl text-xs font-bold">
-                    {gl}
-                  </span>
-                ))}
-              </div>
-            </div>
+              <p className="mt-3 text-sm text-ink">{tutor.gradeLevels.join(', ')}</p>
+            </section>
 
-            {/* Verified Student Reviews Section */}
-            <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200/80 dark:border-slate-800 p-6 sm:p-8 transition-colors">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
-                <div>
-                  <h2 className="text-lg font-black text-slate-900 dark:text-white">Verified Student Feedback</h2>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">Real feedback from 1-on-1 sessions</p>
+            <section className="border-b border-line py-8">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex flex-wrap items-center gap-3">
+                  <h2 className="text-[14px] font-semibold text-ink">
+                    Student reviews
+                  </h2>
+                  <DemoBadge label="Demo reviews" />
                 </div>
                 <button
-                  type="button"
-                  onClick={() => {
-                    setShowReviewForm(!showReviewForm);
-                    try { sounds.playClick(); } catch {}
-                  }}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-primary-500/20"
+                  onClick={() => setShowReviewForm(!showReviewForm)}
+                  className="text-[13px] text-muted hover:text-ink"
                 >
-                  <MessageSquare className="h-3.5 w-3.5" />
-                  {showReviewForm ? 'Cancel' : 'Write a Review'}
+                  {showReviewForm ? 'Cancel' : 'Write a review'}
                 </button>
               </div>
 
-              {/* Interactive Write Review Form */}
               {showReviewForm && (
-                <form onSubmit={handleReviewSubmit} className="mb-6 p-5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-primary-200 dark:border-primary-900/60 space-y-4 animate-in fade-in duration-200">
-                  <div className="font-bold text-xs text-slate-800 dark:text-slate-200 uppercase tracking-wider">
-                    Share Your Learning Experience
-                  </div>
+                <form onSubmit={handleReviewSubmit} className="mt-6 border-y border-line py-5">
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div>
+                      <label className="label" htmlFor="review-name">
+                        Your name
+                      </label>
+                      <input
+                        id="review-name"
+                        type="text"
+                        value={reviewAuthor}
+                        onChange={(e) => setReviewAuthor(e.target.value)}
+                        className="input"
+                      />
+                    </div>
 
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">
-                      Your Rating:
-                    </label>
-                    <div className="flex items-center gap-1.5">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <button
-                          key={star}
-                          type="button"
-                          onMouseEnter={() => setHoverRating(star)}
-                          onMouseLeave={() => setHoverRating(0)}
-                          onClick={() => {
-                            setRatingInput(star);
-                            try { sounds.playPop(); } catch {}
-                          }}
-                          className="p-1 focus:outline-none transition-transform hover:scale-110"
-                        >
-                          <Star 
-                            className={`h-6 w-6 ${
-                              (hoverRating || ratingInput) >= star
-                                ? 'text-amber-400 fill-amber-400'
-                                : 'text-slate-300 dark:text-slate-600'
-                            }`}
-                          />
-                        </button>
-                      ))}
-                      <span className="ml-2 text-xs font-black text-slate-700 dark:text-slate-300">
-                        {ratingInput}.0 Stars
-                      </span>
+                    <div>
+                      <span className="label">Rating</span>
+                      <div className="flex h-10 items-center gap-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <button
+                            key={star}
+                            type="button"
+                            onMouseEnter={() => setHoverRating(star)}
+                            onMouseLeave={() => setHoverRating(0)}
+                            onClick={() => setRatingInput(star)}
+                            aria-label={`${star} star${star === 1 ? '' : 's'}`}
+                            className="p-0.5 text-muted transition-colors hover:text-ink"
+                          >
+                            <Star
+                              className={`h-4 w-4 ${
+                                (hoverRating || ratingInput) >= star
+                                  ? 'fill-ink text-ink'
+                                  : 'text-muted'
+                              }`}
+                            />
+                          </button>
+                        ))}
+                        <span className="ml-2 text-[12px] tabular-nums text-muted">
+                          {ratingInput}.0
+                        </span>
+                      </div>
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">
-                      Your Review
+                  <div className="mt-4">
+                    <label className="label" htmlFor="review-comment">
+                      Review
                     </label>
                     <textarea
+                      id="review-comment"
                       rows={3}
                       required
                       value={reviewComment}
                       onChange={(e) => setReviewComment(e.target.value)}
-                      placeholder="How did this tutor help you? Were the explanations clear?"
-                      className="w-full p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white focus:outline-none focus:border-primary-500"
+                      placeholder="What was the lesson like?"
+                      className="textarea"
                     />
                   </div>
 
-                  <div className="flex justify-end gap-2">
+                  <div className="mt-3 flex justify-end gap-2">
                     <button
                       type="button"
                       onClick={() => setShowReviewForm(false)}
-                      className="px-4 py-2 text-xs font-bold text-slate-500 hover:text-slate-700 dark:text-slate-400"
+                      className="btn btn-quiet"
                     >
                       Cancel
                     </button>
-                    <button
-                      type="submit"
-                      className="px-5 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-xs font-bold shadow-md shadow-primary-500/20"
-                    >
-                      Publish Review
+                    <button type="submit" className="btn btn-primary btn-sm">
+                      Publish review
                     </button>
                   </div>
                 </form>
               )}
 
-              {/* Reviews List */}
-              <div className="space-y-3">
+              <div className="mt-5">
                 {tutorReviews.length === 0 ? (
-                  <div className="py-6 text-center text-xs text-slate-400">
-                    No reviews yet for this tutor. Be the first to leave one!
-                  </div>
+                  <p className="py-4 text-[13px] text-muted">
+                    No demo reviews yet. Add one to try the flow.
+                  </p>
                 ) : (
                   tutorReviews.map((rev) => (
-                    <div key={rev.id} className="p-4 rounded-2xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
-                      <div className="flex justify-between items-start mb-2">
+                    <article key={rev.id} className="border-t border-line py-4 first:border-t-0">
+                      <div className="flex items-start justify-between gap-4">
                         <div className="flex items-center gap-2.5">
-                          <img 
-                            src={rev.authorAvatar} 
-                            alt={rev.authorName} 
-                            className="h-7 w-7 rounded-full object-cover ring-1 ring-slate-200 dark:ring-slate-700" 
+                          <img
+                            src={rev.authorAvatar}
+                            alt=""
+                            className="h-6 w-6 rounded-full object-cover"
                           />
                           <div>
-                            <span className="font-bold text-xs text-slate-900 dark:text-white block">{rev.authorName}</span>
-                            <span className="text-[10px] text-slate-400">{rev.date}</span>
+                            <span className="block text-[13px] font-medium text-ink">
+                              {rev.authorName}
+                            </span>
+                            <span className="text-[11px] text-muted">{rev.date}</span>
                           </div>
                         </div>
-                        <div className="flex items-center gap-1 bg-amber-50 dark:bg-amber-950/40 px-2 py-0.5 rounded-lg border border-amber-200/40 text-amber-500 text-xs font-bold">
+                        <span className="flex items-center gap-1 text-[12px] tabular-nums text-muted">
                           <Star className="h-3 w-3 fill-current" />
-                          <span>{rev.rating.toFixed(1)}</span>
-                        </div>
+                          {rev.rating.toFixed(1)}
+                        </span>
                       </div>
-                      <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed">
+                      <p className="mt-3 max-w-[65ch] text-[13px] leading-relaxed text-muted">
                         {rev.comment}
                       </p>
-                    </div>
+                    </article>
                   ))
                 )}
               </div>
-            </div>
+            </section>
 
-            {/* Interactive Send Message Form */}
-            <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200/80 dark:border-slate-800 p-6 sm:p-8 transition-colors">
-              <h2 className="text-lg font-black text-slate-900 dark:text-white mb-2">Send an Inquiry</h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">Have questions about syllabus coverage or schedule before booking?</p>
-              
+            <section className="py-8">
+              <h2 className="text-[14px] font-semibold text-ink">
+                Send an inquiry
+              </h2>
+              <p className="mt-2 text-[13px] text-muted">
+                Ask about syllabus coverage or schedule before booking.
+              </p>
+
               {messageSent ? (
-                <div className="p-4 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/50 rounded-2xl flex items-center gap-3 text-emerald-800 dark:text-emerald-300 text-xs font-bold">
-                  <CheckCircle2 className="h-5 w-5 text-emerald-600 flex-shrink-0" />
-                  Your inquiry was sent directly to {tutor.name}! You will receive a notification when they reply.
+                <div className="mt-4 flex items-start gap-2 border-y border-line py-4 text-[13px] text-ink">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-ok" />
+                  Demo inquiry saved in your browser. Nothing was sent to {tutor.name}.
                 </div>
               ) : (
-                <form onSubmit={handleSendMessage} className="space-y-3">
-                  <textarea 
+                <form onSubmit={handleSendMessage} className="mt-4">
+                  <label className="sr-only" htmlFor="inquiry">
+                    Message
+                  </label>
+                  <textarea
+                    id="inquiry"
                     value={messageText}
                     onChange={(e) => setMessageText(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-xs font-medium text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-primary-500 focus:outline-none" 
-                    rows={3} 
-                    placeholder={`Write a message to ${tutor.name}...`}
+                    className="textarea"
+                    rows={3}
+                    placeholder={`Write a message to ${tutor.name}`}
                     required
                   />
-                  <button 
-                    type="submit"
-                    className="w-full py-3 bg-slate-900 dark:bg-slate-800 hover:bg-slate-800 dark:hover:bg-slate-700 text-white rounded-xl text-xs font-bold flex justify-center items-center gap-2 shadow-sm transition-all"
-                  >
-                    <Send className="h-4 w-4" /> Send Direct Inquiry
-                  </button>
+                  <div className="mt-3">
+                    <button type="submit" className="btn btn-primary btn-sm">
+                      Send inquiry
+                    </button>
+                  </div>
                 </form>
               )}
-            </div>
-
+            </section>
           </div>
 
-          {/* Sidebar Booking Card */}
-          <div className="lg:col-span-1">
-            <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-xl border border-primary-200/80 dark:border-slate-800 p-6 sm:p-8 sticky top-24 space-y-6 transition-colors">
-              <div className="text-center pb-6 border-b border-slate-100 dark:border-slate-800">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Hourly Rate</span>
-                <div className="text-4xl font-black text-primary-600 dark:text-primary-400 mt-1 tracking-tight">
-                  NPR {tutor.price}
-                </div>
-                <span className="text-xs text-slate-400 font-medium">per 60-minute session</span>
+          <aside className="lg:sticky lg:top-24 lg:self-start">
+            <div className="border-y border-line py-6">
+              <div className="text-[14px] font-semibold text-ink">
+                Hourly rate
               </div>
+              <div className="mt-2 text-[2rem] font-semibold leading-none tracking-[-0.02em] tabular-nums">
+                NPR {tutor.price.toLocaleString()}
+              </div>
+              <div className="mt-1 text-[12px] text-muted">per 60-minute session</div>
 
-              <div className="space-y-3 text-xs text-slate-600 dark:text-slate-300 font-semibold">
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                  <span>1-on-1 Interactive Video Classroom</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                  <span>Live Whiteboard & Collaborative Notes</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                  <span>100% Satisfaction Guarantee</span>
-                </div>
-              </div>
-              
-              <button 
-                onClick={() => {
-                  try { sounds.playClick(); } catch {}
-                  setIsBookingOpen(true);
-                }}
-                className="w-full py-4 px-6 bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-700 hover:to-indigo-700 text-white font-black text-sm rounded-2xl shadow-xl shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all"
+              <ul className="mt-6 space-y-2 border-t border-line pt-5 text-[13px] text-muted">
+                <li>Live one-to-one video classroom</li>
+                <li>Shared whiteboard and notes</li>
+                <li>Demo booking, no charge</li>
+              </ul>
+
+              <button
+                onClick={() => setIsBookingOpen(true)}
+                className="btn btn-primary mt-6 w-full"
               >
-                Book a Session Now
+                Book a session
               </button>
 
-              <p className="text-[11px] text-center text-slate-400 font-medium">
-                Khalti, eSewa & Card payments supported. Instant booking confirmation.
+              <p className="mt-3 text-[11px] leading-relaxed text-muted">
+                Demo checkout only. No payment is processed.
               </p>
             </div>
-          </div>
-
+          </aside>
         </div>
       </div>
-      
-      <BookingModal 
-        tutor={tutor} 
-        isOpen={isBookingOpen} 
-        onClose={() => setIsBookingOpen(false)} 
+
+      <BookingModal
+        tutor={tutor}
+        isOpen={isBookingOpen}
+        onClose={() => setIsBookingOpen(false)}
       />
     </div>
   );

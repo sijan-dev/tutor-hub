@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-15T12:00:00+05:45",
+  "title": "Design System: Tutor Hub",
+  "extensions": {
+    "colorMeta": {
+      "accent": {
+        "role": "primary",
+        "displayName": "Pencil Vermilion",
+        "canonical": "#a33a2b",
+        "tonalRamp": ["#2a0d09", "#4d1914", "#71251d", "#953327", "#b64d3f", "#cd7569", "#e2a69e", "#f5e0dc"]
+      },
+      "ok": {
+        "role": "tertiary",
+        "displayName": "Field Green",
+        "canonical": "#1f6b45",
+        "tonalRamp": ["#082116", "#0e3a26", "#145336", "#1a6c46", "#268a5b", "#45a878", "#7bc7a3", "#cfead9"]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#17181a",
+        "tonalRamp": ["#17181a", "#2a2b2e", "#3e4044", "#55575c", "#6f7176", "#8e9095", "#b4b5b9", "#e6e6e7"]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted Ink",
+        "canonical": "#66655f",
+        "tonalRamp": ["#2a2925", "#3f3e39", "#55544e", "#6c6b64", "#85847c", "#a09f97", "#c3c2bb", "#e9e8e3"]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "#f6f5f1",
+        "tonalRamp": ["#3a3931", "#55534a", "#6f6d63", "#8b897e", "#a8a69b", "#c7c5bb", "#e4e2da", "#f6f5f1"]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Surface",
+        "canonical": "#ffffff",
+        "tonalRamp": ["#2e2e2e", "#474747", "#616161", "#7d7d7d", "#9a9a9a", "#bababa", "#dadada", "#ffffff"]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#dedbd3",
+        "tonalRamp": ["#37352f", "#504e47", "#6a675f", "#85827a", "#a19e95", "#bfbcb2", "#dbd8d0", "#f3f2ed"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Page titles only; never inside a panel." },
+      "headline": { "displayName": "Headline", "purpose": "Section and dialog headings." },
+      "title": { "displayName": "Title", "purpose": "Row names, panel titles, and list anchors." },
+      "body": { "displayName": "Body", "purpose": "Descriptions, messages, and form values." },
+      "label": { "displayName": "Label", "purpose": "Field labels, filter groups, and stat captions." }
+    },
+    "shadows": [
+      { "name": "none", "value": "none", "purpose": "The system is flat. Depth comes from paper/surface tone and 1px hairlines." }
+    ],
+    "motion": [
+      { "name": "state-transition", "value": "150ms ease-out", "purpose": "Color and border transitions on controls." },
+      { "name": "popover-enter", "value": "120ms ease-out", "purpose": "Menu and dialog entrance; opacity and 4px offset only." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Solid ink action for the single most important step on a view.",
+      "html": "<button class=\"ds-btn-primary\">Book session</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 40px; padding: 0 16px; border: 1px solid transparent; border-radius: 2px; background: #17181a; color: #f6f5f1; font-family: 'Archivo', ui-sans-serif, system-ui, sans-serif; font-size: 14px; font-weight: 500; line-height: 1; cursor: pointer; transition: background 150ms ease-out; } .ds-btn-primary:hover { background: #33343a; } .ds-btn-primary:focus-visible { outline: 2px solid #a33a2b; outline-offset: 2px; } .ds-btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Quiet bordered action for secondary paths and cancellation.",
+      "html": "<button class=\"ds-btn-outline\">View profile</button>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 40px; padding: 0 16px; border: 1px solid #dedbd3; border-radius: 2px; background: transparent; color: #17181a; font-family: 'Archivo', ui-sans-serif, system-ui, sans-serif; font-size: 14px; font-weight: 500; line-height: 1; cursor: pointer; transition: border-color 150ms ease-out, background 150ms ease-out; } .ds-btn-outline:hover { border-color: rgba(23, 24, 26, 0.4); background: rgba(23, 24, 26, 0.03); } .ds-btn-outline:focus-visible { outline: 2px solid #a33a2b; outline-offset: 2px; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Standard field with a hairline stroke and a plain ink focus state.",
+      "html": "<div class=\"ds-field\"><label class=\"ds-field-label\" for=\"ds-email\">Email</label><input class=\"ds-input\" id=\"ds-email\" type=\"email\" placeholder=\"name@example.com\" /></div>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 6px; font-family: 'Archivo', ui-sans-serif, system-ui, sans-serif; } .ds-field-label { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #66655f; } .ds-input { height: 40px; width: 100%; padding: 0 12px; border: 1px solid #dedbd3; border-radius: 2px; background: #ffffff; color: #17181a; font-family: inherit; font-size: 14px; outline: none; transition: border-color 150ms ease-out; } .ds-input::placeholder { color: rgba(102, 101, 95, 0.7); } .ds-input:focus { border-color: #17181a; } .ds-input:focus-visible { outline: 2px solid #a33a2b; outline-offset: 2px; }"
+    },
+    {
+      "name": "Underline Tab",
+      "kind": "nav",
+      "description": "Section switcher used on dashboards, profiles, and auth. No filled states.",
+      "html": "<nav class=\"ds-tabs\"><button class=\"ds-tab ds-tab-active\">Upcoming</button><button class=\"ds-tab\">Completed</button><button class=\"ds-tab\">Saved</button></nav>",
+      "css": ".ds-tabs { display: flex; gap: 28px; border-bottom: 1px solid #dedbd3; font-family: 'Archivo', ui-sans-serif, system-ui, sans-serif; } .ds-tab { margin-bottom: -1px; padding: 4px 0 12px; border: none; border-bottom: 2px solid transparent; background: transparent; color: #66655f; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: color 150ms ease-out, border-color 150ms ease-out; } .ds-tab:hover { color: #17181a; } .ds-tab-active { border-bottom-color: #17181a; color: #17181a; } .ds-tab:focus-visible { outline: 2px solid #a33a2b; outline-offset: 2px; }"
+    },
+    {
+      "name": "Subject Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Read-only subject and grade tag on rows and profiles.",
+      "html": "<span class=\"ds-chip\">Mathematics</span> <span class=\"ds-chip\">High School</span>",
+      "css": ".ds-chip { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; border: 1px solid #dedbd3; border-radius: 2px; background: transparent; color: #66655f; font-family: 'Archivo', ui-sans-serif, system-ui, sans-serif; font-size: 12px; line-height: 1.4; }"
+    },
+    {
+      "name": "Tutor Row",
+      "kind": "card",
+      "description": "Flat list row for catalog results: square avatar, name, tags, bio, facts, and actions.",
+      "html": "<article class=\"ds-tutor-row\"><img class=\"ds-tutor-avatar\" src=\"https://picsum.photos/seed/tutorhub/160/160\" alt=\"Tutor portrait\" /><div class=\"ds-tutor-body\"><div class=\"ds-tutor-head\"><h3 class=\"ds-tutor-name\">Rajesh Sharma</h3><span class=\"ds-tutor-rate\">NPR 1,500<span class=\"ds-tutor-unit\"> / hour</span></span></div><div class=\"ds-tutor-tags\"><span class=\"ds-chip\">Mathematics</span><span class=\"ds-chip\">Physics</span></div><p class=\"ds-tutor-bio\">Eight years helping Grade 11–12 students with calculus and mechanics.</p><div class=\"ds-tutor-meta\"><span>Kathmandu</span><span>High School, College</span><span>4.9 · 127 reviews</span></div><div class=\"ds-tutor-actions\"><button class=\"ds-btn-outline\">View profile</button><button class=\"ds-btn-primary\">Book session</button></div></div></article>",
+      "css": ".ds-tutor-row { display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid #dedbd3; background: transparent; font-family: 'Archivo', ui-sans-serif, system-ui, sans-serif; } .ds-tutor-avatar { width: 72px; height: 72px; flex-shrink: 0; border-radius: 2px; object-fit: cover; } .ds-tutor-body { flex: 1; min-width: 0; } .ds-tutor-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; } .ds-tutor-name { margin: 0; font-size: 16px; font-weight: 600; letter-spacing: -0.01em; color: #17181a; } .ds-tutor-rate { font-size: 14px; font-weight: 600; color: #17181a; font-variant-numeric: tabular-nums; } .ds-tutor-unit { font-weight: 400; color: #66655f; } .ds-tutor-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; } .ds-tutor-bio { margin: 10px 0 0; max-width: 60ch; color: #66655f; font-size: 14px; line-height: 1.625; } .ds-tutor-meta { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 10px; color: #66655f; font-size: 12px; } .ds-tutor-actions { display: flex; gap: 8px; margin-top: 14px; } .ds-tutor-actions .ds-btn-outline, .ds-tutor-actions .ds-btn-primary { height: 32px; padding: 0 12px; font-size: 13px; }"
+    },
+    {
+      "name": "Rate Panel",
+      "kind": "custom",
+      "description": "Sticky booking panel on tutor profiles: rate, primary action, and plain facts.",
+      "html": "<aside class=\"ds-rate-panel\"><p class=\"ds-rate-label\">Hourly rate</p><p class=\"ds-rate-value\">NPR 1,500</p><p class=\"ds-rate-unit\">per 60-minute session</p><button class=\"ds-btn-primary\">Book session</button><dl class=\"ds-rate-facts\"><div><dt>Availability</dt><dd>Weekday evenings</dd></div><div><dt>Session length</dt><dd>60 minutes</dd></div><div><dt>Cancellation</dt><dd>Free up to 24h</dd></div></dl></aside>",
+      "css": ".ds-rate-panel { width: 280px; padding: 24px 0; border-top: 1px solid #dedbd3; border-bottom: 1px solid #dedbd3; background: transparent; font-family: 'Archivo', ui-sans-serif, system-ui, sans-serif; } .ds-rate-label { margin: 0; font-size: 14px; font-weight: 600; color: #17181a; } .ds-rate-value { margin: 8px 0 0; font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #17181a; font-variant-numeric: tabular-nums; } .ds-rate-unit { margin: 4px 0 0; font-size: 12px; color: #66655f; } .ds-rate-panel .ds-btn-primary { width: 100%; margin-top: 24px; } .ds-rate-facts { margin: 20px 0 0; padding-top: 18px; border-top: 1px solid #dedbd3; display: flex; flex-direction: column; gap: 10px; } .ds-rate-facts div { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; } .ds-rate-facts dt { color: #66655f; font-size: 13px; } .ds-rate-facts dd { margin: 0; color: #17181a; font-size: 13px; text-align: right; }"
+    },
+    {
+      "name": "Stat Row",
+      "kind": "custom",
+      "description": "Dashboard figures separated by vertical hairlines, with no cards or colored trends.",
+      "html": "<dl class=\"ds-stats\"><div><dt class=\"ds-stat-label\">Upcoming sessions</dt><dd class=\"ds-stat-value\">3</dd></div><div><dt class=\"ds-stat-label\">Hours this month</dt><dd class=\"ds-stat-value\">12.5</dd></div><div><dt class=\"ds-stat-label\">Saved tutors</dt><dd class=\"ds-stat-value\">5</dd></div></dl>",
+      "css": ".ds-stats { display: flex; flex-wrap: wrap; margin: 0; border-top: 1px solid #dedbd3; border-bottom: 1px solid #dedbd3; font-family: 'Archivo', ui-sans-serif, system-ui, sans-serif; } .ds-stats > div { flex: 1; min-width: 140px; padding: 16px 24px; } .ds-stats > div + div { border-left: 1px solid #dedbd3; } .ds-stat-label { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #66655f; } .ds-stat-value { margin: 6px 0 0; font-size: 30px; font-weight: 600; letter-spacing: -0.02em; color: #17181a; font-variant-numeric: tabular-nums; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Marked Paper",
+    "overview": "Tutor Hub should read like a well-kept notebook: warm paper, dark ink, thin ruled lines, and a single red pencil mark where attention is needed. There is no stage, no glow, and no decoration competing with the content. The interface is a working tool for students and tutors, so the design earns trust by being legible, quiet, and predictable rather than by being impressive.\n\nStructure carries the hierarchy. Pages are built from plain rows and sections separated by 1px hairlines, with generous whitespace doing the work that cards, shadows, and gradients would otherwise do. Controls are small, nearly square, and clearly labeled. One typeface handles every level, and the difference between a heading and a label comes from size, weight, and case rather than color or ornament.\n\nThe visual language explicitly rejects the earlier look: violet and indigo gradients, glass panels, neon glow, 3D decoration, tilt effects, confetti, sound effects, emoji icons, pill badges, and oversized rounded corners. None of those return as \"polish.\"",
+    "keyCharacteristics": [
+      "Warm paper ground, white surfaces, and near-black ink; no dark marketing stages.",
+      "One vermilion accent used sparingly for focus, selection, price, and destructive states.",
+      "1px hairlines and whitespace instead of shadows, borders, or card grids.",
+      "A single family, Archivo, across display, body, and labels.",
+      "Flat controls with 2px corners; circles only for avatars and status dots.",
+      "Motion limited to color and border transitions."
+    ],
+    "rules": [
+      { "name": "The One Mark Rule", "body": "Vermilion marks at most one thing per region: the focused field, the selected tab, the price, or the error. If two elements compete for it, neither gets it.", "section": "colors" },
+      { "name": "The No-Wash Rule", "body": "There are no tinted backgrounds, gradient fills, or colored panels. Emphasis comes from ink weight, a hairline, or the single accent mark.", "section": "colors" },
+      { "name": "The Contrast-By-Tone Rule", "body": "Depth and grouping come from paper versus surface, plus a hairline. Never from shadow, blur, or a third background tone.", "section": "colors" },
+      { "name": "The One-Family Rule", "body": "No second typeface, no display serif, no monospace except for a transaction code. Contrast comes from size, weight, and case.", "section": "typography" },
+      { "name": "The No-Eyebrow Rule", "body": "Headings stand alone. No small uppercase kicker sits above a title to announce what the section is; the heading already does that.", "section": "typography" },
+      { "name": "The Quiet-Metadata Rule", "body": "Labels, captions, and secondary facts are 11–12px, muted, and never bolder than the content they describe.", "section": "typography" },
+      { "name": "The Flat-Field Rule", "body": "A surface at rest has no shadow. If an element needs to separate from its background, add a hairline or space, never elevation.", "section": "elevation" },
+      { "name": "The Opaque-Overlay Rule", "body": "Menus, popovers, and dialogs use a solid surface color. Translucency and blur are not part of the system.", "section": "elevation" },
+      { "name": "The Nearly-Square Rule", "body": "If a corner radius reads as a design feature, it is too large. 2px is the ceiling.", "section": "shapes" },
+      { "name": "The Single-Line Rule", "body": "No border-left stripes, no double rules, no thick dividers. Separators are one hairline or nothing.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do build hierarchy from size, weight, spacing, and hairlines before reaching for color.",
+      "Do use paper for the page, surface for panels, and a 1px hairline for every separator.",
+      "Do keep one primary action per view, filled with ink.",
+      "Do use 2px radii and flat surfaces everywhere.",
+      "Do use vermilion for focus, selection, price, and error only.",
+      "Do write direct labels (\"Book session\", \"Reset filters\") instead of promotional phrasing.",
+      "Do keep demo and sample-data disclosures visible and plainly worded."
+    ],
+    "donts": [
+      "Don't add gradients, glass, blur, glow, shadows, or 3D decoration.",
+      "Don't use emoji as icons, sound effects, confetti, or celebratory animation.",
+      "Don't introduce pill badges, 24px corners, tilt effects, or hover lifts.",
+      "Don't put a small uppercase kicker above a heading.",
+      "Don't fill cards or callouts with tinted backgrounds or colored side stripes.",
+      "Don't use more than one typeface or set headings below 600 weight.",
+      "Don't turn search results or dashboards into grids of identical cards.",
+      "Don't repeat unverified marketing claims (\"Nepal's first\", \"Top 1%\"); this is a demo with sample data."
+    ]
+  }
+}
